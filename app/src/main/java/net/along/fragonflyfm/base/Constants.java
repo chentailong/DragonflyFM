@@ -18,6 +18,9 @@ public class Constants {
     public  final static int PAGE_COUNT = 3;
 
 
+    public static int recLen = 5;//跳过倒计时提示5秒
+
+
     public static final int WHAT_COUNT_DOWN = 0;
     public static final int WHAT_EXCEPTION = 1;
     public static final int WHAT_COUNT_DONE = 2;

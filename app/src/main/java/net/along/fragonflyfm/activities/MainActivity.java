@@ -64,9 +64,15 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     }
 
 
+    /**
+     *重写VIew Page的页面切换方法
+     * @param position
+     * @param positionOffset
+     * @param positionOffsetPixels
+     */
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        //重写ViewPager页面切换的处理方法
+
     }
 
     @Override
@@ -74,8 +80,27 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     }
 
+    /**
+     * 滑动底部导航栏同步更新
+     * @param state
+     */
     @Override
     public void onPageScrollStateChanged(int state) {
         //state等于2时滑动结束
+        if (state==2){
+            switch (mViewPager.getCurrentItem()){
+                case Constants.WHAT_COUNT_DOWN:
+                    mRadio.setChecked(true);
+                    break;
+                case Constants.INDEX_SUBSCRIPTION:
+                    mSearch.setChecked(true);
+                    break;
+                case Constants.INDEX_HISTORY:
+                    mAnalyze.setChecked(true);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
