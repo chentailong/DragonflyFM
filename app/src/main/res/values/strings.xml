@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">蜻蜓FM</string>
+    <string name="txt_copy_right">欢迎光临</string>
+    <string name="txt_ip_hint">请输入服务器IP</string>
+    <string name="txt_port_hint">请输入端口号</string>
+
+    <string-array name="main_indicator_name">
+        <item>电台</item>
+        <item>搜索</item>
+        <item>分析</item>
+    </string-array>
+
+</resources>
