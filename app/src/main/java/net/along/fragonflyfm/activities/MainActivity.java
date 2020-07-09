@@ -63,10 +63,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         }
     }
 
-    //重写ViewPager页面切换的处理方法
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+        //重写ViewPager页面切换的处理方法
     }
 
     @Override
