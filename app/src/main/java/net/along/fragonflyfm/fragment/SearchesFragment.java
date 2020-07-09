@@ -13,9 +13,12 @@ import net.along.fragonflyfm.base.BaseFragment;
  **/
 
 public class SearchesFragment extends BaseFragment {
+
+    private View mRootView;
+
     @Override
     protected View onSubViewLoaded(LayoutInflater inflater, ViewGroup container) {
-        View rootView = inflater.inflate(R.layout.fragment_searches,container,false);
-        return rootView;
+        mRootView = inflater.inflate(R.layout.fragment_searches,container,false);
+        return mRootView;
     }
 }

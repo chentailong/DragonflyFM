@@ -3,6 +3,9 @@ package net.along.fragonflyfm.fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.base.BaseFragment;
 
@@ -13,10 +16,13 @@ import net.along.fragonflyfm.base.BaseFragment;
  **/
 
 public class RadioFragment extends BaseFragment {
+    private static final String TAG = "RadioFragment";
+    private RecyclerView mRecyclerView;
 
     @Override
     protected View onSubViewLoaded(LayoutInflater inflater, ViewGroup container) {
-        View rootView = inflater.inflate(R.layout.fragment_radio,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_radio, container, false);
+        mRecyclerView = rootView.findViewById(R.id.fragment_radio_rv);
         return rootView;
     }
 }

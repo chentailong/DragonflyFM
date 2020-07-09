@@ -1,17 +1,15 @@
 package net.along.fragonflyfm.activities;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
 import net.along.fragonflyfm.R;
+import net.along.fragonflyfm.base.Constants;
 import net.along.fragonflyfm.base.WebServerConnection;
 import net.along.fragonflyfm.fragment.AwaitFragment;
 import net.along.fragonflyfm.util.AbstractStaticHandler;
@@ -31,18 +29,13 @@ import java.util.concurrent.ThreadPoolExecutor;
  **/
 
 public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCancelSplashListener {
-    private static final int WHAT_COUNT_DOWN = 0;
-    private static final int WHAT_EXCEPTION = 1;
-    private static final int WHAT_COUNT_DONE = 2;
-    private static final int WHAT_SERVER_OFF = 3;
-    private int seconds = 10;
     private TextView mTextView;
     private boolean isServerOn = true;
     private final SplashHandler handler = new SplashHandler(this);
 
     @Override
     public void cancelCountDown() {
-        seconds = 0;
+        Constants.seconds = 0;
     }
 
     /**
@@ -57,29 +50,29 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
         @Override
         public void handleMessage(Message msg, AwaitActivity context) {
             switch (msg.what) {
-                case WHAT_COUNT_DOWN:
+                case Constants.WHAT_COUNT_DOWN:
                     String display = msg.obj + "秒";  //生成时间
                     context.mTextView.setText(display); //显示时间
                     break;
-                case WHAT_COUNT_DONE:
+                case Constants.WHAT_EXCEPTION:
+                    new AlertDialog.Builder(context)
+                            .setMessage(msg.obj.toString())
+                            .setPositiveButton("继续", (dialog, which) -> funcGoBack.gotoMain(context))
+                            .setNegativeButton("退出", (dialog, which) -> AppUtils.exit())
+                            .show();
+                    break;
+                case Constants.WHAT_COUNT_DONE:
                     if (context.isServerOn) {
                         funcGoBack.gotoMain(context);
                     }
                     break;
-                case WHAT_SERVER_OFF:
+                case Constants.WHAT_SERVER_OFF:
                     Context running = AppUtils.getRunningActivity();
                     new AlertDialog.Builder(Objects.requireNonNull(running)).setTitle("提示")
                             .setMessage("服务器没有响应，是否继续？\n" + msg.obj.toString())
                             .setPositiveButton("退出", (dialog, which) -> AppUtils.exit())
                             .setNeutralButton("设置", (dialog, which) -> ViewUtils.gotoSettings(running, funcGoBack))
                             .setNegativeButton("确定", (dialog, which) -> funcGoBack.gotoMain(context))
-                            .show();
-                    break;
-                case WHAT_EXCEPTION:
-                    new AlertDialog.Builder(context)
-                            .setMessage(msg.obj.toString())
-                            .setPositiveButton("继续", (dialog, which) -> funcGoBack.gotoMain(context))
-                            .setNegativeButton("退出", (dialog, which) -> AppUtils.exit())
                             .show();
                     break;
                 default:
@@ -120,18 +113,17 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
         }
     }
 
-
     private void countDown() {
-        while (seconds >= 0) {
-            handler.sendMessage(handler.obtainMessage(WHAT_COUNT_DOWN, seconds));
+        while (Constants.seconds >= 0) {
+            handler.sendMessage(handler.obtainMessage(Constants.WHAT_COUNT_DOWN, Constants.seconds));
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                handler.sendMessage(handler.obtainMessage(WHAT_EXCEPTION, e.getMessage()));
+                handler.sendMessage(handler.obtainMessage(Constants.WHAT_EXCEPTION, e.getMessage()));
             }
-            seconds--;
+            Constants.seconds--;
         }
-        handler.sendEmptyMessage(WHAT_COUNT_DONE);
+        handler.sendEmptyMessage(Constants.WHAT_COUNT_DONE);
     }
 
     private void detectWebServer() {
@@ -139,7 +131,7 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
             WebServerConnection.tryConnectToServer();
         } catch (IOException e) {
             isServerOn = false;
-            handler.sendMessage(handler.obtainMessage(WHAT_SERVER_OFF, e.getMessage()));
+            handler.sendMessage(handler.obtainMessage(Constants.WHAT_SERVER_OFF, e.getMessage()));
         }
     }
 

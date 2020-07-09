@@ -1,72 +1,81 @@
 package net.along.fragonflyfm.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
-
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.adapter.IndicatorAdapter;
-import net.along.fragonflyfm.adapter.MainContentAdapter;
-import net.lucode.hackware.magicindicator.MagicIndicator;
-import net.lucode.hackware.magicindicator.ViewPagerHelper;
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
+import net.along.fragonflyfm.base.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    private MagicIndicator mMagicIndicator;
+public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
+    private IndicatorAdapter mAdapter;
     private ViewPager mViewPager;
-    private IndicatorAdapter mIndicatorAdapter;
-    private static final String TAG = "MainActivity";
+    private RadioGroup mGroup;
+    private RadioButton mRadio;
+    private RadioButton mSearch;
+    private RadioButton mAnalyze;
+    private final static String TAG = "MainActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAdapter = new IndicatorAdapter(getSupportFragmentManager()); //将适配器绑定于FragmentAdapter，用于数据的更新
         initView();
-        initEvent();  //设置事件
-    }
-
-    private void initEvent() {
-        mIndicatorAdapter.setOnIndicatorTapClickListener(new IndicatorAdapter.onIndicatorTapClickListener() {
-            @Override
-            public void onTabClick(int index) {
-                if (mViewPager != null) {
-                    mViewPager.setCurrentItem(index);
-                }
-            }
-        });
-
+        mRadio.setChecked(true);
     }
 
     private void initView() {
-        //绑定底部导航栏
-        mMagicIndicator = this.findViewById(R.id.magic_navigation);
-        //背景颜色
-        mMagicIndicator.setBackgroundColor(this.getResources().getColor(R.color.colorGray));
-        //创建适配器
-        mIndicatorAdapter = new IndicatorAdapter(this);
-        CommonNavigator commonNavigator = new CommonNavigator(this);
-        commonNavigator.setAdjustMode(true);  //平铺内容
-        commonNavigator.setAdapter(this.mIndicatorAdapter);
-        //内容显示id绑定
-        mViewPager = this.findViewById(R.id.view_pager);
-        //创建内容适配器
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        MainContentAdapter mainContentAdapter = new MainContentAdapter(fragmentManager);
-        mViewPager.setAdapter(mainContentAdapter);
+        mGroup = findViewById(R.id.button_rg_tab_bar);
+        mRadio = findViewById(R.id.main_radio);                     //电台
+        mSearch = findViewById(R.id.main_search);                   //搜索
+        mAnalyze = findViewById(R.id.main_analyze);                 //分析
+        mGroup.setOnCheckedChangeListener(this);                    //滑动设置监听器
+        mViewPager = findViewById(R.id.view_pager);                 //内容存储器，存放Fragment中的数据显示
+        mViewPager.setAdapter(mAdapter);                            //为内容添加适配器
+        mViewPager.setCurrentItem(0);
+        mViewPager.addOnPageChangeListener(this);
+    }
 
-        //把View和indicator绑定在一起
-        mMagicIndicator.setNavigator(commonNavigator);
-        ViewPagerHelper.bind(mMagicIndicator,mViewPager);
+    /**
+     * 点击图标实现跳转
+     */
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId){
+            case R.id.main_radio:
+                mViewPager.setCurrentItem(Constants.INDEX_RECOMMEND);
+                break;
+            case R.id.main_search:
+                mViewPager.setCurrentItem(Constants.INDEX_SUBSCRIPTION);
+                break;
+            case R.id.main_analyze:
+                mViewPager.setCurrentItem(Constants.INDEX_HISTORY);
+                break;
+            default:
+                break;
+        }
+    }
+
+    //重写ViewPager页面切换的处理方法
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
 
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        //state等于2时滑动结束
+    }
 }

@@ -15,6 +15,13 @@ public class Constants {
     public final static int INDEX_SUBSCRIPTION = 1;
     public final static int INDEX_HISTORY = 2;
     //获取fragment的页面数量，一共为3页
-    public final static int PAGE_COUNT = 3;
+    public  final static int PAGE_COUNT = 3;
 
+
+    public static final int WHAT_COUNT_DOWN = 0;
+    public static final int WHAT_EXCEPTION = 1;
+    public static final int WHAT_COUNT_DONE = 2;
+    public static final int WHAT_SERVER_OFF = 3;
+    //加载时间
+    public static int seconds = 5;
 }
