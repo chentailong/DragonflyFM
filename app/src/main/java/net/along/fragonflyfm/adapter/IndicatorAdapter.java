@@ -37,6 +37,7 @@ public class IndicatorAdapter extends FragmentPagerAdapter {
         super.destroyItem(container, position, object);
     }
 
+
     @Override
     public Fragment getItem(int position) {
       return FragmentCreator.getFragment(position);
