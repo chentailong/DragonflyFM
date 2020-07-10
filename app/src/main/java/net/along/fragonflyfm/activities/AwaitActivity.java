@@ -30,6 +30,7 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
     private Runnable mRunnable;
     Timer mTimer = new Timer();
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
