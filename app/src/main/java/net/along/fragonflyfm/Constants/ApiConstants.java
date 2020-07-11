@@ -1,9 +1,6 @@
 package net.along.fragonflyfm.Constants;
 
-/**
- * @author lzzy_gxy on 2020/6/13.
- * Description:
- */
+
 public class ApiConstants {
     /**
      * 默认的服务器IP和端口

@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import net.along.fragonflyfm.R;
-import net.along.fragonflyfm.base.Constants;
+import net.along.fragonflyfm.Constants.Constants;
 import net.along.fragonflyfm.fragment.AwaitFragment;
 import net.lzzy.commutils.BaseActivity;
 
@@ -29,7 +29,6 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
     private Handler mHandler;
     private Runnable mRunnable;
     Timer mTimer = new Timer();
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +78,7 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
     };
 
     /**
-     * 点击事件
+     * 点击事件，点击跳转
      *
      * @param
      */

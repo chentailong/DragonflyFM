@@ -1,4 +1,4 @@
-package net.along.fragonflyfm.base;
+package net.along.fragonflyfm.Constants;
 
 /**
  * 创建者 by:陈泰龙

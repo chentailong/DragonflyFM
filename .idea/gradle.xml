@@ -13,6 +13,8 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/commutils" />
             <option value="$PROJECT_DIR$/listlib" />
+            <option value="$PROJECT_DIR$/simpledatepickers" />
+            <option value="$PROJECT_DIR$/sqllib" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
