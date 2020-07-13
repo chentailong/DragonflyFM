@@ -1,8 +1,7 @@
 package net.along.fragonflyfm.base;
 
 
-import net.along.fragonflyfm.base.BaseFragment;
-import net.along.fragonflyfm.base.Constants;
+import net.along.fragonflyfm.Constants.Constants;
 import net.along.fragonflyfm.fragment.AnalyzeFragment;;
 import net.along.fragonflyfm.fragment.RadioFragment;
 import net.along.fragonflyfm.fragment.SearchesFragment;
