@@ -37,11 +37,12 @@
 
     </LinearLayout>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_radio_rv"
+    <GridView
+        android:id="@+id/fragment_searches_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never" />
+        android:gravity="center"
+        android:numColumns="auto_fit"
+        android:overScrollMode="never"/>
 
 </LinearLayout>

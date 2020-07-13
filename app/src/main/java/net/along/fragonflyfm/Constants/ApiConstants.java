@@ -20,6 +20,7 @@ public class ApiConstants {
      **/
     public static final String ACTION_RESULT = "/api/Result/PracticeResult";
 
+
     /**
      * Api传递来的Json格式字符串中Practice对象对应的Key
      **/
