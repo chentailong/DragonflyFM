@@ -8,6 +8,9 @@
     <string name="text_fragment_searches">搜索</string>
     <string name="text_fragment_analyze">分析</string>
 
+    <string name="text_program_return">返回</string>
+    <string name="program_name">电台名称</string>
+
     <string-array name="main_indicator_name">
         <item>电台</item>
         <item>搜索</item>
