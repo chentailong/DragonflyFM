@@ -48,7 +48,7 @@ public class SearchesAdapter extends BaseAdapter<Searches> {
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(position);
+                    mItemClickListener.onItemClick(position,getList().get(position));
                 }
                 Log.d(TAG, "onClick: 你点击了：" + position);
             }
@@ -65,7 +65,7 @@ public class SearchesAdapter extends BaseAdapter<Searches> {
     }
 
     public interface onSearchesItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position, Searches searches);
     }
 
     class ViewHolder {

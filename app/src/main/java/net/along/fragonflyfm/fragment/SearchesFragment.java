@@ -28,6 +28,7 @@ import net.along.fragonflyfm.activities.ProgramActivity;
 import net.along.fragonflyfm.adapter.SearchesAdapter;
 import net.along.fragonflyfm.base.BaseFragment;
 import net.along.fragonflyfm.entity.Searches;
+import net.along.fragonflyfm.presenters.SearchesDetailProgram;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -131,7 +132,9 @@ public class SearchesFragment extends BaseFragment implements SearchesAdapter.on
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(int position, Searches searches) {
+        //根据位置拿到数据
+        SearchesDetailProgram.getInstance().setTargetSearches(searches);
         //item被点击了,跳转到详情
         Intent intent = new Intent(getContext(), ProgramActivity.class);
         startActivity(intent);
