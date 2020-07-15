@@ -9,7 +9,7 @@
         android:layout_height="170dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/fragment_searches_series"
+        android:background="@drawable/fragment_searches_background"
         android:orientation="vertical">
 
         <ImageView

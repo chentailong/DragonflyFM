@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+    android:id="@+id/track_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="30dp"
+    android:gravity="center"
+    android:text="楼市荷包查笃撑             主播钟晴、小鱼、海玲、婉君"
+    android:textSize="20dp"
+    android:maxLines="2"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:ellipsize="end"/>
+
+    <ImageView
+        android:src="@drawable/kl"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="200dp"
+        android:layout_below="@id/track_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:layout_height="wrap_content">
+
+        <!--进度条和时间-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+           <TextView
+               android:id="@+id/current_position"
+               android:layout_width="50dp"
+               android:layout_height="wrap_content"
+               android:layout_centerVertical="true"
+               android:gravity="center"
+               android:text="00:00"
+               android:textSize="16sp"/>
+
+            <SeekBar
+                android:id="@+id/track_seek_bar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:max="100" />
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="00:00"
+                android:textSize="16sp"/>
+        </RelativeLayout>
+
+
+        <!--播放控制-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/activity_play_left"
+                android:layout_width="0dp"
+                android:src="@drawable/qh2"
+                android:layout_height="20dp"
+                android:layout_weight="1"/>
+            <ImageView
+                android:id="@+id/activity_play_pause_playback"
+                android:layout_width="0dp"
+                android:src="@drawable/zt"
+                android:layout_height="20dp"
+                android:layout_weight="1"/>
+            <ImageView
+                android:id="@+id/activity_play_right"
+                android:layout_width="0dp"
+                android:src="@drawable/qh1"
+                android:layout_height="20dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
