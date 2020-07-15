@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--返回上一页面/名称-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/activity_player_return"
+            android:layout_width="30dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/zjt"
+            android:layout_height="30dp" />
+        <TextView
+            android:id="@+id/activity_station_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="电台名称FM"
+            android:textSize="25dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+       android:layout_width="match_parent"
+       android:orientation="vertical"
+        android:layout_marginTop="30dp"
+       android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/activity_player_track_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="楼市荷包查笃撑"
+        android:textSize="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+    <TextView
+        android:id="@+id/activity_player_anchor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="主播钟晴、小鱼、海玲、婉君"
+        android:textSize="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+</LinearLayout>
+    <!--电台图片-->
+
+    <ImageView
+        android:id="@+id/activity_player_radio_pictures"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_marginTop="130dp"
+        android:src="@drawable/kl" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:layout_height="wrap_content">
+
+        <!--进度条和时间-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+           <TextView
+               android:id="@+id/activity_current_position"
+               android:layout_width="50dp"
+               android:layout_height="wrap_content"
+               android:layout_centerVertical="true"
+               android:gravity="center"
+               android:text="00:00"
+               android:textSize="16sp"/>
+
+            <SeekBar
+                android:id="@+id/activity_track_seek_bar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/activity_current_positions"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="00:00"
+                android:textSize="16sp"/>
+        </RelativeLayout>
+
+
+        <!--播放控制-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/activity_play_left"
+                android:layout_width="0dp"
+                android:src="@drawable/qh2"
+                android:layout_height="20dp"
+                android:layout_weight="1"/>
+            <ImageView
+                android:id="@+id/activity_play_pause_playback"
+                android:layout_width="0dp"
+                android:src="@drawable/zt"
+                android:layout_height="20dp"
+                android:layout_weight="1"/>
+            <ImageView
+                android:id="@+id/activity_play_right"
+                android:layout_width="0dp"
+                android:src="@drawable/qh1"
+                android:layout_height="20dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

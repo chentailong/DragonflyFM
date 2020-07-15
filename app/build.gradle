@@ -46,7 +46,6 @@ dependencies {
     implementation 'com.squareup.okio:okio:1.15.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha04'
-    implementation project(path: ':sqllib')
     implementation 'com.google.zxing:core:3.3.3'
     implementation 'liji.library.dev:citypickerview:5.1.0'
     implementation 'liji.library.dev:citypickerview:5.2.2'
