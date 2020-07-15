@@ -13,6 +13,7 @@
         <ImageView
             android:id="@+id/activity_player_return"
             android:layout_width="30dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/zjt"
             android:layout_height="30dp" />
         <TextView
@@ -21,12 +22,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="电台名称FM"
-            android:textSize="20dp"/>
+            android:textSize="25dp"/>
     </LinearLayout>
 
     <LinearLayout
        android:layout_width="match_parent"
        android:orientation="vertical"
+        android:layout_marginTop="30dp"
        android:layout_height="wrap_content">
 
     <TextView
@@ -51,13 +53,13 @@
 
 </LinearLayout>
     <!--电台图片-->
+
     <ImageView
         android:id="@+id/activity_player_radio_pictures"
-        android:src="@drawable/kl"
-        android:layout_marginTop="90dp"
-        android:layout_marginBottom="150dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="450dp"
+        android:layout_marginTop="130dp"
+        android:src="@drawable/kl" />
 
     <LinearLayout
         android:layout_width="match_parent"
