@@ -1,6 +1,7 @@
 package net.along.fragonflyfm.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -23,9 +24,11 @@ import com.lljjcoder.style.cityjd.JDCityConfig;
 import com.lljjcoder.style.cityjd.JDCityPicker;
 
 import net.along.fragonflyfm.R;
+import net.along.fragonflyfm.activities.ProgramActivity;
 import net.along.fragonflyfm.adapter.SearchesAdapter;
 import net.along.fragonflyfm.base.BaseFragment;
 import net.along.fragonflyfm.entity.Searches;
+import net.along.fragonflyfm.presenters.SearchesDetailProgram;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +53,7 @@ import okhttp3.Response;
  * 2020/7/1
  **/
 
-public class SearchesFragment extends BaseFragment {
+public class SearchesFragment extends BaseFragment implements SearchesAdapter.onSearchesItemClickListener {
     private String province;
     private TextView tv_location;
     private View mRootView;
@@ -125,6 +128,16 @@ public class SearchesFragment extends BaseFragment {
     private void setAdapter(List<Searches> list) {
         mAdapter = new SearchesAdapter(getContext(), list);
         mGridView.setAdapter(mAdapter);
+        mAdapter.setOnSearchesItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(int position, Searches searches) {
+        //根据位置拿到数据
+        SearchesDetailProgram.getInstance().setTargetSearches(searches);
+        //item被点击了,跳转到详情
+        Intent intent = new Intent(getContext(), ProgramActivity.class);
+        startActivity(intent);
     }
 
 

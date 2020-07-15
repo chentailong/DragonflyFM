@@ -1,6 +1,7 @@
 package net.along.fragonflyfm.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,33 +19,58 @@ import java.util.List;
  **/
 
 public class SearchesAdapter extends BaseAdapter<Searches> {
+    private static final String TAG = "SearchesAdapter";
+    private onSearchesItemClickListener mItemClickListener  = null;
 
-    public SearchesAdapter(Context context, List<Searches> list){
-        super(context,list);
+    public SearchesAdapter(Context context, List<Searches> list) {
+        super(context, list);
     }
-     @Override
-     public View getView(int position, View convertView, ViewGroup parent) {
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
-         if (viewHolder == null) {
-             viewHolder = new ViewHolder();
-             convertView = getInflater().inflate(R.layout.fragment_searches_view,null);
-             viewHolder.title = convertView.findViewById(R.id.fragment_searches_station_name);
-             viewHolder.cover = convertView.findViewById(R.id.fragment_searches_image);
-             viewHolder.audience_count = convertView.findViewById(R.id.fragment_searches_number_of_listeners);
-             convertView.setTag(viewHolder);
-         }else{
-             viewHolder = (ViewHolder) convertView.getTag();
-         }
-         Searches searches = getList().get(position);
-         viewHolder.title.setText(searches.getTitle());
-         viewHolder.audience_count.setText(searches.getAudience_count());
-         viewHolder.cover.setImageBitmap(searches.getBitmap());
-         return convertView;
-     }
+        if (viewHolder == null) {
+            viewHolder = new ViewHolder();
+            convertView = getInflater().inflate(R.layout.fragment_searches_view, null);
+            viewHolder.title = convertView.findViewById(R.id.fragment_searches_station_name);
+            viewHolder.cover = convertView.findViewById(R.id.fragment_searches_image);
+            viewHolder.audience_count = convertView.findViewById(R.id.fragment_searches_number_of_listeners);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+        Searches searches = getList().get(position);
+        viewHolder.title.setText(searches.getTitle());
+        viewHolder.audience_count.setText(searches.getAudience_count());
+        viewHolder.cover.setImageBitmap(searches.getBitmap());
+        //处理点击事件
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mItemClickListener != null) {
+                    mItemClickListener.onItemClick(position,getList().get(position));
+                }
+                Log.d(TAG, "onClick: 你点击了：" + position);
+            }
+        });
+        return convertView;
+    }
+
+    /**
+     * 暴露接口，使SearchesFragment能够使用，实现点击事件
+     * @param listener
+     */
+    public void setOnSearchesItemClickListener(onSearchesItemClickListener listener){
+        this.mItemClickListener = listener;
+    }
+
+    public interface onSearchesItemClickListener {
+        void onItemClick(int position, Searches searches);
+    }
 
     class ViewHolder {
-         TextView title;   //电台名称
-         ImageView cover;//电台图片
-         TextView audience_count;   //观看人数
+        TextView title;   //电台名称
+        ImageView cover;//电台图片
+        TextView audience_count;   //观看人数
     }
- }
+}
