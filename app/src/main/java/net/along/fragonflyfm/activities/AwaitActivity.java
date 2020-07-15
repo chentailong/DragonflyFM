@@ -10,9 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.Constants.Constants;
+import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.fragment.AwaitFragment;
+import net.along.fragonflyfm.util.JSONUtils;
 import net.lzzy.commutils.BaseActivity;
 
 import java.util.Timer;
@@ -37,7 +38,7 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
         getWindow().setFlags(flag, flag);
         setContentView(R.layout.activity_await);
         initVIew();
-
+        startService(new Intent(this, JSONUtils.class));
         mTimer.schedule(task, 1000, 1000);//等待时间一秒，停顿时间一秒
         mHandler = new Handler();
         mHandler.postDelayed(mRunnable = new Runnable() {

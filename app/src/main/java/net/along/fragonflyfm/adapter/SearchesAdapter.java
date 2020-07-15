@@ -72,5 +72,6 @@ public class SearchesAdapter extends BaseAdapter<Searches> {
         TextView title;   //电台名称
         ImageView cover;//电台图片
         TextView audience_count;   //观看人数
+        TextView province;  //省份
     }
 }

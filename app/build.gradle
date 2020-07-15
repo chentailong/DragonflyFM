@@ -42,8 +42,8 @@ dependencies {
     implementation files('libs\\XmlyOAuth2SDK_V2.0.jar')
     implementation 'com.github.hackware1993:MagicIndicator:1.5.0'
     api 'com.google.code.gson:gson:2.8.1'
-    api 'com.squareup.okhttp3:okhttp:3.11.0'
-    api 'com.squareup.okio:okio:1.15.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.okio:okio:1.15.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha04'
     implementation project(path: ':sqllib')

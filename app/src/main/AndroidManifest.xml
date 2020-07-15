@@ -24,6 +24,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.ProgramActivity"/>
+
+        <service android:name=".util.JSONUtils"
+            android:enabled="true"/>
     </application>
 
 </manifest>

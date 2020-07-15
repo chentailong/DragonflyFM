@@ -3,7 +3,6 @@ package net.along.fragonflyfm.presenters;
 import net.along.fragonflyfm.entity.Searches;
 import net.along.fragonflyfm.interfaces.ISearchesDetailProgram;
 import net.along.fragonflyfm.interfaces.ISearchesDetailViewCallback;
-
 import java.util.ArrayList;
 import java.util.List;
 

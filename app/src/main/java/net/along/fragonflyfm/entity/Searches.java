@@ -14,6 +14,7 @@ import net.lzzy.sqllib.Sqlitable;
 public class Searches implements Sqlitable {
 
     private String province;  //省
+
     private String city;   //地址
     private String district; //区域
     private String location;  //位置
