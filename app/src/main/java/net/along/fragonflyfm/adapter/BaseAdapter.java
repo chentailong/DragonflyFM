@@ -48,7 +48,7 @@ public abstract class BaseAdapter<T> extends android.widget.BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return position;
+        return list.get(position);
     }
 
     @Override

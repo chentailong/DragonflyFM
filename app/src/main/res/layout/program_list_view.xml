@@ -6,7 +6,7 @@
 
 
     <RelativeLayout
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/program_trumpet_imageView"
             android:text="我是大标题"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/program_people_imageView"
@@ -43,10 +43,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
-            android:text="15000" />
+            android:text="50" />
 
         <ImageView
             android:id="@+id/program_microphone_imageView"

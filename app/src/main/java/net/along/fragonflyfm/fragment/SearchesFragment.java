@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -77,7 +78,7 @@ public class SearchesFragment extends BaseFragment implements SearchesAdapter.on
     }
 
     /**
-     * 组件的绑定
+     * 组件的初始化
      */
     private void initView() {
         tv_location = mRootView.findViewById(R.id.fragment_searches_location);
@@ -104,6 +105,9 @@ public class SearchesFragment extends BaseFragment implements SearchesAdapter.on
         SearchesDetailProgram.getInstance().setTargetSearches(searches);
         //item被点击了,跳转到详情
         Intent intent = new Intent(getContext(), ProgramActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("position",position);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 

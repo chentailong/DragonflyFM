@@ -1,5 +1,7 @@
 package net.along.fragonflyfm.entity;
 
+import android.graphics.Bitmap;
+
 import net.lzzy.sqllib.Sqlitable;
 
 /**
@@ -11,9 +13,27 @@ import net.lzzy.sqllib.Sqlitable;
 public class Program  implements Sqlitable {
     private String title;  //节目名称
     private String username;  //主播
-    private int number;  //观看人数
+    private String audience_count;  //观看人数
     private String start_time; //开始时间
     private String end_time; //结束时间
+    private Bitmap mBitmap;
+    private String thumb;
+
+    public String getThumb() {
+        return thumb;
+    }
+
+    public void setThumb(String thumb) {
+        this.thumb = thumb;
+    }
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
+    }
 
     public String getTitle() {
         return title;
@@ -31,12 +51,12 @@ public class Program  implements Sqlitable {
         this.username = username;
     }
 
-    public int getNumber() {
-        return number;
+    public String getAudience_count() {
+        return audience_count;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setAudience_count(String audience_count) {
+        this.audience_count = audience_count;
     }
 
     public String getStart_time() {
@@ -59,8 +79,6 @@ public class Program  implements Sqlitable {
     public String toString() {
         return "Program{" +
                 "title='" + title + '\'' +
-                ", username='" + username + '\'' +
-                ", number=" + number +
                 ", start_time='" + start_time + '\'' +
                 ", end_time='" + end_time + '\'' +
                 '}';

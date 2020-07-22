@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ProgramAdapter extends BaseAdapter<Program> {
 
-    private static final String TAG = "SearchesAdapter";
+    private static final String TAG = "ProgramAdapter";
     private onProgramItemClickListener mItemClickListener  = null;
 
     public ProgramAdapter(Context context, List<Program> list) {
@@ -35,7 +35,7 @@ public class ProgramAdapter extends BaseAdapter<Program> {
             view = getInflater().inflate(R.layout.program_list_view, null);
             viewHolder.title = view.findViewById(R.id.program_title);
             viewHolder.username = view.findViewById(R.id.program_username);
-            viewHolder.number = view.findViewById(R.id.program_people);
+            viewHolder.audience_count = view.findViewById(R.id.program_people);
             viewHolder.start_time = view.findViewById(R.id.program_start_time);
             viewHolder.end_time = view.findViewById(R.id.program_end_time);
             view.setTag(viewHolder);
@@ -45,7 +45,7 @@ public class ProgramAdapter extends BaseAdapter<Program> {
         Program program =getList().get(i);
         viewHolder.title.setText(program.getTitle());
         viewHolder.username.setText(program.getUsername());
-        viewHolder.number.setText(program.getNumber());
+        viewHolder.audience_count.setText(program.getAudience_count());
         viewHolder.start_time.setText(program.getStart_time());
         viewHolder.end_time.setText(program.getEnd_time());
         return view;
@@ -66,7 +66,7 @@ public class ProgramAdapter extends BaseAdapter<Program> {
     class ViewHolder {
         TextView title;  //节目名称
         TextView username;  //主播
-        TextView number;  //观看人数
+        TextView audience_count;  //观看人数
         TextView start_time; //开始时间
         TextView end_time; //结束时间
     }
