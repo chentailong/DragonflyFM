@@ -20,7 +20,8 @@ public class Searches implements Sqlitable {
     private String location;  //位置
     private String name;
     private String title;   //电台名称
-    private int id;    //电台ID
+
+    private int content_id;    //电台ID
     private int cover;//电台图片
     private String audience_count;   //观看人数
     private Bitmap mBitmap;
@@ -76,12 +77,12 @@ public class Searches implements Sqlitable {
         this.title = title;
     }
 
-    public int getId() {
-        return id;
+    public int getContent_id() {
+        return content_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setContent_id(int content_id) {
+        this.content_id = content_id;
     }
 
     public int getCover() {
@@ -116,7 +117,7 @@ public class Searches implements Sqlitable {
                 ", district='" + district + '\'' +
                 ", location='" + location + '\'' +
                 ", title='" + title + '\'' +
-                ", id=" + id +
+                ", id=" + content_id +
                 ", cover=" + cover +
                 ", audience_count='" + audience_count + '\'' +
                 '}';

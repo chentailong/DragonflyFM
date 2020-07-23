@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -105,10 +104,10 @@ public class SearchesFragment extends BaseFragment implements SearchesAdapter.on
         SearchesDetailProgram.getInstance().setTargetSearches(searches);
         //item被点击了,跳转到详情
         Intent intent = new Intent(getContext(), ProgramActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt("position",position);
-        intent.putExtras(bundle);
+        intent.putExtra("id",searches.getContent_id());
         startActivity(intent);
+        
+
     }
 
 
@@ -197,6 +196,7 @@ public class SearchesFragment extends BaseFragment implements SearchesAdapter.on
                         for (int i = 0; i < items.length(); i++) {  //循环加载数据
                             searches = new Searches();        //实体类对象
                             JSONObject jsonObject2 = items.getJSONObject(i);
+                            searches.setContent_id(jsonObject2.getInt("content_id"));
                             searches.setTitle(jsonObject2.getString("title"));  //将JSON数据中的名称写入
                             searches.setAudience_count(jsonObject2.getString("audience_count"));//将JSON数据中的观看人数写入
                             Searches finalSearches = searches;

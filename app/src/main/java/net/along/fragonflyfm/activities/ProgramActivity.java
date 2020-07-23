@@ -1,6 +1,7 @@
 package net.along.fragonflyfm.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,17 +41,18 @@ import okhttp3.Response;
 
 public class ProgramActivity extends BaseActivity implements ISearchesDetailViewCallback {
 
+    private final static String TAG = "ProgramActivity";
     private TextView mTv_return;
     private TextView mTv_program_name;
     private TextView tv;
     private SearchesDetailProgram mSearchesDetailProgram;
     private ProgramAdapter mAdapter;
-    private final static String TAG = "ProgramActivity";
     private List<Program> mList;
     private ListView mListView;
-    private String mContent;
+    private int mData;   //获取到的ID，点击时传过来的id
     private String json = "https://rapi.qingting.fm/categories/239/channels?with_total=true&page=1&pagesize=12";
-
+    private Program program = null;
+    private JSONObject jsonObject2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +65,9 @@ public class ProgramActivity extends BaseActivity implements ISearchesDetailView
         mSearchesDetailProgram.registerViewCallback(this);
     }
 
+    /**
+     * 绑定适配器，并创建子线程，使用OKHttp解析JSON数据，获取数据源
+     */
     private void okHttp() {
         mAdapter = new ProgramAdapter(this, mList);
         mListView.setAdapter(mAdapter);
@@ -84,27 +89,41 @@ public class ProgramActivity extends BaseActivity implements ISearchesDetailView
         }).start();
     }
 
+    /**
+     * 解析JSON数据，转换成字符串，加载至list中
+     *
+     * @param jsonData
+     */
     private void parseJSONWithJSONObject(String jsonData) {
-        List<Program> list = new ArrayList<>();
-
         if (jsonData != null) {
             try {
                 JSONObject jsonObject = new JSONObject(jsonData);
                 String Data = jsonObject.getString("Data");
                 JSONObject jsonDataEs = new JSONObject(Data);
                 JSONArray jsonItems = jsonDataEs.getJSONArray("items");
-                Program program = null;
                 for (int i = 0; i < jsonItems.length(); i++) {
                     program = new Program();
-                    JSONObject jsonObject2 = jsonItems.getJSONObject(i);
-                    JSONObject jsonObject3 = jsonObject2.getJSONObject("nowplaying");
-                    program.setAudience_count(jsonObject2.getString("audience_count"));
-                    program.setTitle(jsonObject3.getString("title"));
-                    program.setStart_time(jsonObject3.getString("start_time"));
+                    jsonObject2 = jsonItems.getJSONObject(i);
+                    program.setContent_id(jsonObject2.getInt("content_id"));
+                    if (program.getContent_id() == mData) {
+                        JSONObject jsonObject3 = jsonObject2.getJSONObject("nowplaying");
+                        JSONArray jsonBroadcasters = jsonObject3.getJSONArray("broadcasters");
 
-                    mList.add(program);
+                        for (int j = 0 ; j<jsonBroadcasters.length(); j++){
+                            JSONObject jsonObjectBroadcasters = jsonBroadcasters.getJSONObject(j);
+                            if (j==0){
+                                program.setUsername(jsonObjectBroadcasters.getString("username"));
+                            }
+                                program.setUsernames(jsonObjectBroadcasters.getString("username"));
+                        }//循环输出主播姓名
+
+                        program.setAudience_count(jsonObject2.getString("audience_count"));
+                        program.setTitle(jsonObject3.getString("title"));
+                        program.setStart_time(jsonObject3.getString("start_time"));
+                        mList.add(program);
+                        break;
+                    }
                 }
-                Log.d(TAG, "parseJSONWithJSONObject: " + program);
                 mHandler.sendEmptyMessageDelayed(1, 100);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -112,6 +131,11 @@ public class ProgramActivity extends BaseActivity implements ISearchesDetailView
         }
     }
 
+    /**
+     * 处理器类、
+     * 当线程传回信息时解析加载
+     * 开始队列
+     */
     @SuppressLint("HandlerLeak")
     public Handler mHandler = new Handler() {
         @Override
@@ -134,7 +158,9 @@ public class ProgramActivity extends BaseActivity implements ISearchesDetailView
         tv = this.findViewById(R.id.tv);
         mListView = findViewById(R.id.program_list);
         mList = new ArrayList<>();
-        Log.d(TAG, "initView: 初始化控件成功");
+        Intent intent = getIntent();
+        mData = intent.getIntExtra("id", 0);
+        Log.d(TAG, "initView: " + mData);
     }
 
 
@@ -150,7 +176,6 @@ public class ProgramActivity extends BaseActivity implements ISearchesDetailView
         });
     }
 
-
     /**
      * 将上一页的数据显示在这一层
      *
@@ -162,5 +187,4 @@ public class ProgramActivity extends BaseActivity implements ISearchesDetailView
             mTv_program_name.setText(searches.getTitle());
         }
     }
-
 }

@@ -11,13 +11,32 @@ import net.lzzy.sqllib.Sqlitable;
  **/
 
 public class Program  implements Sqlitable {
+
+    private int content_id;
     private String title;  //节目名称
-    private String username;  //主播
+    private String username;  //主播名字
+    private String usernames;
     private String audience_count;  //观看人数
     private String start_time; //开始时间
     private String end_time; //结束时间
     private Bitmap mBitmap;
     private String thumb;
+
+    public int getContent_id() {
+        return content_id;
+    }
+
+    public void setContent_id(int content_id) {
+        this.content_id = content_id;
+    }
+
+    public String getUsernames() {
+        return usernames;
+    }
+
+    public void setUsernames(String usernames) {
+        this.usernames = usernames;
+    }
 
     public String getThumb() {
         return thumb;
@@ -78,11 +97,17 @@ public class Program  implements Sqlitable {
     @Override
     public String toString() {
         return "Program{" +
-                "title='" + title + '\'' +
+                "content_id='" + content_id + '\'' +
+                ", title='" + title + '\'' +
+                ", username='" + username + '\'' +
+                ", audience_count='" + audience_count + '\'' +
                 ", start_time='" + start_time + '\'' +
                 ", end_time='" + end_time + '\'' +
+                ", mBitmap=" + mBitmap +
+                ", thumb='" + thumb + '\'' +
                 '}';
     }
+
     @Override
     public Object getIdentityValue() {
         return null;

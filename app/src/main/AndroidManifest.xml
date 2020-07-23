@@ -27,6 +27,7 @@
 
         <service android:name=".util.JSONUtils"
             android:enabled="true"/>
+
     </application>
 
 </manifest>

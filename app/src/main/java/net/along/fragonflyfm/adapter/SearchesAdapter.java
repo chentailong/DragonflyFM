@@ -35,6 +35,7 @@ public class SearchesAdapter extends BaseAdapter<Searches> {
             viewHolder.title = convertView.findViewById(R.id.fragment_searches_station_name);
             viewHolder.cover = convertView.findViewById(R.id.fragment_searches_image);
             viewHolder.audience_count = convertView.findViewById(R.id.fragment_searches_number_of_listeners);
+            viewHolder.content_id = convertView.findViewById(R.id.searches_content_id);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -43,6 +44,7 @@ public class SearchesAdapter extends BaseAdapter<Searches> {
         viewHolder.title.setText(searches.getTitle());
         viewHolder.audience_count.setText(searches.getAudience_count());
         viewHolder.cover.setImageBitmap(searches.getBitmap());
+        viewHolder.content_id.setId(searches.getContent_id());
         //处理点击事件
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,5 +75,6 @@ public class SearchesAdapter extends BaseAdapter<Searches> {
         ImageView cover;//电台图片
         TextView audience_count;   //观看人数
         TextView province;  //省份
+        TextView  content_id;  //电台ID
     }
 }

@@ -21,6 +21,13 @@
             android:layout_marginTop="5dp"
             android:background="@drawable/ic_trumpet" />
 
+
+        <TextView
+            android:id="@+id/program_content_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/program_title"
             android:layout_width="wrap_content"
@@ -65,28 +72,21 @@
             android:layout_below="@+id/program_title"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/program_microphone_imageView"
-            android:text="陆秋傧 ， 胡大航" />
+            android:text="陆秋傧 "/>
+
+        <TextView
+            android:id="@+id/program_usernames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/program_title"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/program_username"
+            android:text="、 胡大航" />
+
+
 
         <TextView
             android:id="@+id/program_start_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/program_title"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@+id/program_end_time"
-            android:text="15:00" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/program_title"
-            android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@+id/program_end_time"
-            android:text=" - " />
-
-        <TextView
-            android:id="@+id/program_end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/program_title"

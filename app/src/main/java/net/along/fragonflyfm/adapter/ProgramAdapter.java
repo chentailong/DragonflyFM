@@ -37,7 +37,8 @@ public class ProgramAdapter extends BaseAdapter<Program> {
             viewHolder.username = view.findViewById(R.id.program_username);
             viewHolder.audience_count = view.findViewById(R.id.program_people);
             viewHolder.start_time = view.findViewById(R.id.program_start_time);
-            viewHolder.end_time = view.findViewById(R.id.program_end_time);
+            viewHolder.content_id = view.findViewById(R.id.program_content_id);
+            viewHolder.usernames = view.findViewById(R.id.program_usernames);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
@@ -46,8 +47,9 @@ public class ProgramAdapter extends BaseAdapter<Program> {
         viewHolder.title.setText(program.getTitle());
         viewHolder.username.setText(program.getUsername());
         viewHolder.audience_count.setText(program.getAudience_count());
-        viewHolder.start_time.setText(program.getStart_time());
-        viewHolder.end_time.setText(program.getEnd_time());
+        viewHolder.start_time.setText("start :"+program.getStart_time());
+        viewHolder.content_id.setId(program.getContent_id());
+        viewHolder.usernames.setText("    "+program.getUsernames());
         return view;
     }
 
@@ -66,9 +68,10 @@ public class ProgramAdapter extends BaseAdapter<Program> {
     class ViewHolder {
         TextView title;  //节目名称
         TextView username;  //主播
+        TextView usernames;
         TextView audience_count;  //观看人数
         TextView start_time; //开始时间
-        TextView end_time; //结束时间
+        TextView content_id; //电台id
     }
 
 }
