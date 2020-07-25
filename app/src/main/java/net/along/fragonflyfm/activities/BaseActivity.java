@@ -1,4 +1,4 @@
-package net.along.fragonflyfm.adapter;
+package net.along.fragonflyfm.activities;
 
 import androidx.fragment.app.FragmentActivity;
 

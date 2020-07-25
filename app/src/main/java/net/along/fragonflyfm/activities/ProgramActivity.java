@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import net.along.fragonflyfm.R;
-import net.along.fragonflyfm.adapter.BaseActivity;
 import net.along.fragonflyfm.adapter.ProgramAdapter;
 import net.along.fragonflyfm.entity.Program;
 import net.along.fragonflyfm.entity.Searches;

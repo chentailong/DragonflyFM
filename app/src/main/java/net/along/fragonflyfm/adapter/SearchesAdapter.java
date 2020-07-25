@@ -20,7 +20,8 @@ import java.util.List;
 
 public class SearchesAdapter extends BaseAdapter<Searches> {
     private static final String TAG = "SearchesAdapter";
-    private onSearchesItemClickListener mItemClickListener  = null;
+    private onSearchesItemClickListener mItemClickListener = null;
+    private int flag = 0;
 
     public SearchesAdapter(Context context, List<Searches> list) {
         super(context, list);
@@ -36,6 +37,7 @@ public class SearchesAdapter extends BaseAdapter<Searches> {
             viewHolder.cover = convertView.findViewById(R.id.fragment_searches_image);
             viewHolder.audience_count = convertView.findViewById(R.id.fragment_searches_number_of_listeners);
             viewHolder.content_id = convertView.findViewById(R.id.searches_content_id);
+            viewHolder.collection = convertView.findViewById(R.id.fragment_searches_collection);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -45,12 +47,31 @@ public class SearchesAdapter extends BaseAdapter<Searches> {
         viewHolder.audience_count.setText(searches.getAudience_count());
         viewHolder.cover.setImageBitmap(searches.getBitmap());
         viewHolder.content_id.setId(searches.getContent_id());
+        //收藏点击事件
+        ViewHolder finalViewHolder = viewHolder;
+        viewHolder.collection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              switch (flag){
+                  case 0 :
+                      finalViewHolder.collection.setImageResource(R.drawable.ic_collect);
+                      Log.d(TAG, "onClick: 你收藏了这个电台");
+                      flag = 1 ;
+                      break;
+                  case 1:
+                      finalViewHolder.collection.setImageResource(R.drawable.ic_not_collect);
+                      Log.d(TAG, "onClick: 你取消了收藏");
+                      flag = 0 ;
+                      break;
+              }
+            }
+        });
         //处理点击事件
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(position,getList().get(position));
+                    mItemClickListener.onItemClick(position, getList().get(position));
                 }
                 Log.d(TAG, "onClick: 你点击了：" + position);
             }
@@ -60,9 +81,10 @@ public class SearchesAdapter extends BaseAdapter<Searches> {
 
     /**
      * 暴露接口，使SearchesFragment能够使用，实现点击事件
+     *
      * @param listener
      */
-    public void setOnSearchesItemClickListener(onSearchesItemClickListener listener){
+    public void setOnSearchesItemClickListener(onSearchesItemClickListener listener) {
         this.mItemClickListener = listener;
     }
 
@@ -75,6 +97,7 @@ public class SearchesAdapter extends BaseAdapter<Searches> {
         ImageView cover;//电台图片
         TextView audience_count;   //观看人数
         TextView province;  //省份
-        TextView  content_id;  //电台ID
+        TextView content_id;  //电台ID
+        ImageView collection;   //收藏
     }
 }

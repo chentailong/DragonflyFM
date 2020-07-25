@@ -62,7 +62,7 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="2dp"
-                android:background="@android:drawable/btn_star_big_on" />
+                android:background="@drawable/ic_not_collect" />
         </LinearLayout>
     </LinearLayout>
 
