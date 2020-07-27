@@ -5,6 +5,7 @@
     android:background="#EDE9E9">
 
     <LinearLayout
+        android:id="@+id/Lv_view"
         android:layout_width="130dp"
         android:layout_height="170dp"
         android:layout_marginLeft="10dp"

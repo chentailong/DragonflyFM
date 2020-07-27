@@ -6,6 +6,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,19 +75,9 @@
             android:layout_toRightOf="@+id/program_microphone_imageView"
             android:text="陆秋傧 "/>
 
-        <TextView
-            android:id="@+id/program_usernames"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/program_title"
-            android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/program_username"
-            android:text="、 胡大航" />
-
-
 
         <TextView
-            android:id="@+id/program_start_time"
+            android:id="@+id/program_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/program_title"

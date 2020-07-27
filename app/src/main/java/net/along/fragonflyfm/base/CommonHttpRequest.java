@@ -1,7 +1,8 @@
-package net.along.fragonflyfm.util;
+package net.along.fragonflyfm.base;
 
 import java.io.IOException;
 
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,6 +28,13 @@ public class CommonHttpRequest {
         }
         return null;
     }
+
+    public static void getHttp(String url, Callback callback){
+        OkHttpClient okHttpClient=new OkHttpClient();
+        Request request=new Request.Builder().url(url).build();
+        okHttpClient.newCall(request).enqueue(callback);
+    }
+
 
     public static Response postHttp(String url, String json) {
         OkHttpClient okHttpClient = new OkHttpClient();

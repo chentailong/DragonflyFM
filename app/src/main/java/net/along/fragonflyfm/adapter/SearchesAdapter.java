@@ -1,14 +1,29 @@
 package net.along.fragonflyfm.adapter;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import net.along.fragonflyfm.R;
-import net.along.fragonflyfm.entity.Searches;
+import net.along.fragonflyfm.activities.ProgramActivity;
+import net.along.fragonflyfm.base.DownloadData;
+import net.along.fragonflyfm.entity.SearchesData;
+
+import org.json.JSONArray;
 
 import java.util.List;
 
@@ -18,86 +33,123 @@ import java.util.List;
  * 2020/7/13
  **/
 
-public class SearchesAdapter extends BaseAdapter<Searches> {
+public class SearchesAdapter extends RecyclerView.Adapter {
     private static final String TAG = "SearchesAdapter";
-    private onSearchesItemClickListener mItemClickListener = null;
+    protected List<SearchesData> data;
     private int flag = 0;
+    private Context context;
 
-    public SearchesAdapter(Context context, List<Searches> list) {
-        super(context, list);
+    public SearchesAdapter(Context context, List<SearchesData> data) {
+        this.data = data;
+        this.context = context;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == 0) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_searches_view, null);
+            CardViewHolder holder = new CardViewHolder(view);
+            return holder;
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, null);
+            FooterHolder holder = new FooterHolder(view);
+            return holder;
+        }
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
-        if (viewHolder == null) {
-            viewHolder = new ViewHolder();
-            convertView = getInflater().inflate(R.layout.fragment_searches_view, null);
-            viewHolder.title = convertView.findViewById(R.id.fragment_searches_station_name);
-            viewHolder.cover = convertView.findViewById(R.id.fragment_searches_image);
-            viewHolder.audience_count = convertView.findViewById(R.id.fragment_searches_number_of_listeners);
-            viewHolder.content_id = convertView.findViewById(R.id.searches_content_id);
-            viewHolder.collection = convertView.findViewById(R.id.fragment_searches_collection);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-        Searches searches = getList().get(position);
-        viewHolder.title.setText(searches.getTitle());
-        viewHolder.audience_count.setText(searches.getAudience_count());
-        viewHolder.cover.setImageBitmap(searches.getBitmap());
-        viewHolder.content_id.setId(searches.getContent_id());
-        //收藏点击事件
-        ViewHolder finalViewHolder = viewHolder;
-        viewHolder.collection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              switch (flag){
-                  case 0 :
-                      finalViewHolder.collection.setImageResource(R.drawable.ic_collect);
-                      Log.d(TAG, "onClick: 你收藏了这个电台");
-                      flag = 1 ;
-                      break;
-                  case 1:
-                      finalViewHolder.collection.setImageResource(R.drawable.ic_not_collect);
-                      Log.d(TAG, "onClick: 你取消了收藏");
-                      flag = 0 ;
-                      break;
-              }
-            }
-        });
-        //处理点击事件
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(position, getList().get(position));
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof CardViewHolder) {
+            final SearchesData fmCardView = data.get(position);
+            ((CardViewHolder) holder).listeners.setText(fmCardView.getAudience_count() + "");
+            ((CardViewHolder) holder).titleTextView.setText(fmCardView.getTitle());
+            Glide.with(context).load(fmCardView.getCover()).into(((CardViewHolder) holder).coverImg);
+            ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
+            ((CardViewHolder) holder).Lv_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent toPlayList = new Intent(context, ProgramActivity.class);
+                    toPlayList.putExtra("cover", fmCardView.getCover());
+                    toPlayList.putExtra("channelName", fmCardView.getTitle());
+                    toPlayList.putExtra("previous", fmCardView.getRegion().getTitle());
+                    toPlayList.putExtra("channel", fmCardView.getTitle());
+                    toPlayList.putExtra("channel_id", fmCardView.getContent_id());
+                    context.startActivity(toPlayList);
                 }
-                Log.d(TAG, "onClick: 你点击了：" + position);
-            }
-        });
-        return convertView;
+            });
+            ((CardViewHolder) holder).favorImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switch (flag) {
+                        case  0:
+                            Toast.makeText(context, "你收藏了这个电台", Toast.LENGTH_SHORT).show();
+                            ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_collect);
+                            flag=1;
+                            break;
+                        case 1:
+                            Toast.makeText(context, "你取消收藏了这个电台", Toast.LENGTH_SHORT).show();
+                            ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
+                            flag=0;
+                            break;
+                    }
+                }
+            });
+        }
     }
 
-    /**
-     * 暴露接口，使SearchesFragment能够使用，实现点击事件
-     *
-     * @param listener
-     */
-    public void setOnSearchesItemClickListener(onSearchesItemClickListener listener) {
-        this.mItemClickListener = listener;
+
+    public void upData() {
+        JSONArray array = DownloadData.GetJSON();
+        Gson gson = new Gson();
+        List<SearchesData> list =
+                gson.fromJson(array.toString(), new TypeToken<List<SearchesData>>() {}.getType());
+        this.data = list;
+        notifyDataSetChanged();
     }
 
-    public interface onSearchesItemClickListener {
-        void onItemClick(int position, Searches searches);
+    @Override
+    public int getItemViewType(int position) {
+        if (position == data.size()) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    class ViewHolder {
-        TextView title;   //电台名称
-        ImageView cover;//电台图片
-        TextView audience_count;   //观看人数
-        TextView province;  //省份
-        TextView content_id;  //电台ID
-        ImageView collection;   //收藏
+    @Override
+    public int getItemCount() {
+        return data.size();
+    }
+
+
+    public class CardViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView coverImg;
+        TextView titleTextView;
+        ImageView favorImg;
+        TextView listeners;
+        LinearLayout Lv_view;
+
+        public CardViewHolder(@NonNull View itemView) {
+            super(itemView);
+            coverImg = itemView.findViewById(R.id.fragment_searches_image);
+            titleTextView = itemView.findViewById(R.id.fragment_searches_station_name);
+            favorImg = itemView.findViewById(R.id.fragment_searches_collection);
+            listeners = itemView.findViewById(R.id.fragment_searches_number_of_listeners);
+            Lv_view = itemView.findViewById(R.id.Lv_view);
+        }
+    }
+
+    public class FooterHolder extends RecyclerView.ViewHolder {
+
+        ProgressBar progressBar;
+        TextView loadingText;
+
+        public FooterHolder(@NonNull View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.item_loading_bar);
+            loadingText = itemView.findViewById(R.id.item_loading_tv);
+        }
     }
 }

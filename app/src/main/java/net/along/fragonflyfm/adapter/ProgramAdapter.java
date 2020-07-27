@@ -1,16 +1,21 @@
 package net.along.fragonflyfm.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import net.along.fragonflyfm.R;
+import net.along.fragonflyfm.entity.Broadcasters;
 import net.along.fragonflyfm.entity.Program;
-import net.along.fragonflyfm.entity.Searches;
 
 import java.util.List;
-
 
 /**
  * 创建者 by:陈泰龙
@@ -18,60 +23,100 @@ import java.util.List;
  * 2020/7/16
  **/
 
-public class ProgramAdapter extends BaseAdapter<Program> {
+public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramItem> {
+    private List<Program> mProgram;
+    private Context mContext;
 
-    private static final String TAG = "ProgramAdapter";
-    private onProgramItemClickListener mItemClickListener  = null;
 
-    public ProgramAdapter(Context context, List<Program> list) {
-        super(context, list);
+    public ProgramAdapter(Context context,List<Program> mProgram){
+        this.mProgram=mProgram;
+        this.mContext=context;
+    }
+
+
+    @NonNull
+    @Override
+    public ProgramItem onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.program_list,parent,false);
+        ProgramItem item = new ProgramItem(view);
+        return item;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup parent) {
-        ViewHolder viewHolder = null;
-        if (viewHolder == null) {
-            viewHolder = new ViewHolder();
-            view = getInflater().inflate(R.layout.program_list_view, null);
-            viewHolder.title = view.findViewById(R.id.program_title);
-            viewHolder.username = view.findViewById(R.id.program_username);
-            viewHolder.audience_count = view.findViewById(R.id.program_people);
-            viewHolder.start_time = view.findViewById(R.id.program_start_time);
-            viewHolder.content_id = view.findViewById(R.id.program_content_id);
-            viewHolder.usernames = view.findViewById(R.id.program_usernames);
-            view.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) view.getTag();
+    public void onBindViewHolder(@NonNull ProgramItem holder, int position) {
+        final Program entity=mProgram.get(position);
+        holder.countView.setText("2345");
+        List<Broadcasters>broadcasters=entity.getBroadcasters();
+        String host="";
+        for (Broadcasters hostObj:broadcasters){
+            host=host+"  "+hostObj.getUsername();
         }
-        Program program =getList().get(i);
-        viewHolder.title.setText(program.getTitle());
-        viewHolder.username.setText(program.getUsername());
-        viewHolder.audience_count.setText(program.getAudience_count());
-        viewHolder.start_time.setText("start :"+program.getStart_time());
-        viewHolder.content_id.setId(program.getContent_id());
-        viewHolder.usernames.setText("    "+program.getUsernames());
-        return view;
+        holder.hostView.setText(host);
+        holder.stateImg.setImageResource(R.drawable.ic_trumpet);
+        holder.titleView.setText(entity.getTitle());
+        holder.durationView.setText("["+entity.getStart_time()+"-"+entity.getEnd_time()+"]");
+
+        final String finalHost = host;
+//        holder.mRelativeLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent=new Intent(mContext, PlayActivity.class);
+//                intent.putExtra("channelName",((PlayListActivity)mContext).channelName);
+//                intent.putExtra("cover",((PlayListActivity)mContext).cover);
+//                intent.putExtra("title",entity.getTitle());
+//                intent.putExtra("broadcaster", finalHost);
+//                intent.putExtra("start_time",entity.getStart_time());
+//                intent.putExtra("end_time",entity.getEnd_time());
+//                intent.putExtra("duration",entity.getDuration());
+//
+//                List<PlayingList> playingList=new ArrayList<>();
+//                for(ProgramItemEntity itemEntity:programs){
+//                    PlayingList playingItem=new PlayingList();
+//                    String host="";
+//                    for (Broadcasters hostObj:itemEntity.getBroadcasters()){
+//                        host=host+"  "+hostObj.getUsername();
+//                    }
+//                    playingItem.setBroadcasters(host);
+//                    playingItem.setChannelId(((PlayListActivity)context).channelId);
+//                    playingItem.setPlayUrl(itemEntity.getStart_time());
+//                    playingItem.setEndTime(itemEntity.getEnd_time());
+//                    String playUrl=MyTime.changeToPlayUrl(((PlayListActivity)context).channelId,
+//                            itemEntity.getStart_time(),itemEntity.getEnd_time());
+//                    playingItem.setPlayUrl(playUrl);
+//                    playingItem.setProgramName(itemEntity.getTitle());
+//                    playingList.add(playingItem);
+//                }
+//                PlayService.setPlayingList(playingList);
+//                context.startService(new Intent(context, PlayService.class));
+//                context.startActivity(intent);
+//            }
+//        });
     }
 
-    /**
-     * 暴露接口，使SearchesFragment能够使用，实现点击事件
-     * @param listener
-     */
-    public void setOnProgramItemClickListener(onProgramItemClickListener listener){
-        this.mItemClickListener = listener;
+
+    @Override
+    public int getItemCount() {
+        return mProgram.size();
     }
 
-    public interface onProgramItemClickListener {
-        void onItemClick(int position, Searches searches);
-    }
+    class ProgramItem extends RecyclerView.ViewHolder {
 
-    class ViewHolder {
-        TextView title;  //节目名称
-        TextView username;  //主播
-        TextView usernames;
-        TextView audience_count;  //观看人数
-        TextView start_time; //开始时间
-        TextView content_id; //电台id
-    }
+        ImageView stateImg;
+        TextView titleView;
+        TextView hostView;
+        TextView countView;
+        TextView durationView;
+        RelativeLayout mRelativeLayout;
 
+
+        public ProgramItem(@NonNull View itemView) {
+            super(itemView);
+            stateImg = itemView.findViewById(R.id.program_trumpet_imageView);
+            titleView = itemView.findViewById(R.id.program_title);
+            hostView = itemView.findViewById(R.id.program_username);
+            countView = itemView.findViewById(R.id.program_people);
+            durationView = itemView.findViewById(R.id.program_duration);
+            mRelativeLayout = itemView.findViewById(R.id.relativeLayout);
+        }
+    }
 }

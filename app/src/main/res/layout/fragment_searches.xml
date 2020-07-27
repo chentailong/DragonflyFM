@@ -19,7 +19,11 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/fragment_searches_background"
+            android:focusable="false"
+            android:iconifiedByDefault="false"
             app:queryHint="请输入关键字" />
+
+
 
         <TextView
             android:id="@+id/fragment_searches_location"
@@ -37,12 +41,19 @@
 
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/fragment_searches_data"
+    <RelativeLayout
+        android:id="@+id/fragment_searches_mask"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:numColumns="3"
-        android:overScrollMode="never"/>
+        android:background="#000000"
+        android:visibility="gone"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fm_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
 
 </LinearLayout>
