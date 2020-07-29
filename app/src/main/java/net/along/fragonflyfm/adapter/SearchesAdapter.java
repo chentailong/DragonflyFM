@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.ProgramActivity;
 import net.along.fragonflyfm.entity.SearchesData;
-import net.along.fragonflyfm.util.GetFMItemJsonService;
+import net.along.fragonflyfm.util.FMItemJsonUtil;
 
 import org.json.JSONArray;
 
@@ -101,7 +101,7 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
     public void upData(){
-        JSONArray array= GetFMItemJsonService.getLastGetJson();
+        JSONArray array= FMItemJsonUtil.getLastGetJson();
         Gson gson=new Gson();
         List<SearchesData> list=
                 gson.fromJson(array.toString(), new TypeToken<List<SearchesData>>(){}.getType());

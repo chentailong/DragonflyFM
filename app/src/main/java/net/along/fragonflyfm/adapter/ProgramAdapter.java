@@ -1,6 +1,7 @@
 package net.along.fragonflyfm.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.along.fragonflyfm.R;
+import net.along.fragonflyfm.activities.PlayerActivity;
+import net.along.fragonflyfm.activities.ProgramActivity;
+import net.along.fragonflyfm.base.GetTime;
 import net.along.fragonflyfm.entity.Broadcasters;
+import net.along.fragonflyfm.entity.Player;
 import net.along.fragonflyfm.entity.Program;
+import net.along.fragonflyfm.util.PlayUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,47 +57,47 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
         for (Broadcasters hostObj : broadcasters) {
             host = host + "  " + hostObj.getUsername();
         }
-        holder.audience_count.setText("123456");
+        holder.audience_count.setText(entity.getDuration());
         holder.hostView.setText(host);
         holder.stateImg.setImageResource(R.drawable.ic_trumpet);
         holder.titleView.setText(entity.getTitle());
         holder.durationView.setText("[" + entity.getStart_time() + "-" + entity.getEnd_time() + "]");
 
         final String finalHost = host;
-//        holder.mRelativeLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent=new Intent(mContext, PlayActivity.class);
-//                intent.putExtra("channelName",((PlayListActivity)mContext).channelName);
-//                intent.putExtra("cover",((PlayListActivity)mContext).cover);
-//                intent.putExtra("title",entity.getTitle());
-//                intent.putExtra("broadcaster", finalHost);
-//                intent.putExtra("start_time",entity.getStart_time());
-//                intent.putExtra("end_time",entity.getEnd_time());
-//                intent.putExtra("duration",entity.getDuration());
-//
-//                List<PlayingList> playingList=new ArrayList<>();
-//                for(ProgramItemEntity itemEntity:programs){
-//                    PlayingList playingItem=new PlayingList();
-//                    String host="";
-//                    for (Broadcasters hostObj:itemEntity.getBroadcasters()){
-//                        host=host+"  "+hostObj.getUsername();
-//                    }
-//                    playingItem.setBroadcasters(host);
-//                    playingItem.setChannelId(((PlayListActivity)context).channelId);
-//                    playingItem.setPlayUrl(itemEntity.getStart_time());
-//                    playingItem.setEndTime(itemEntity.getEnd_time());
-//                    String playUrl=MyTime.changeToPlayUrl(((PlayListActivity)context).channelId,
-//                            itemEntity.getStart_time(),itemEntity.getEnd_time());
-//                    playingItem.setPlayUrl(playUrl);
-//                    playingItem.setProgramName(itemEntity.getTitle());
-//                    playingList.add(playingItem);
-//                }
-//                PlayService.setPlayingList(playingList);
-//                context.startService(new Intent(context, PlayService.class));
-//                context.startActivity(intent);
-//            }
-//        });
+        holder.mRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(context, PlayerActivity.class);
+                intent.putExtra("channelName",((ProgramActivity)context).channelName);
+                intent.putExtra("cover",((ProgramActivity)context).cover);
+                intent.putExtra("title",entity.getTitle());
+                intent.putExtra("broadcaster", finalHost);
+                intent.putExtra("start_time",entity.getStart_time());
+                intent.putExtra("end_time",entity.getEnd_time());
+                intent.putExtra("duration",entity.getDuration());
+
+                List<Player> playingList=new ArrayList<>();
+                for(Program itemEntity:mProgram){
+                    Player playingItem=new Player();
+                    String host="";
+                    for (Broadcasters hostObj:itemEntity.getBroadcasters()){
+                        host=host+"  "+hostObj.getUsername();
+                    }
+                    playingItem.setBroadcasters(host);
+                    playingItem.setChannelId(((ProgramActivity)context).channelId);
+                    playingItem.setPlayUrl(itemEntity.getStart_time());
+                    playingItem.setEndTime(itemEntity.getEnd_time());
+                    String playUrl= GetTime.changeToPlayUrl(((ProgramActivity)context).channelId,
+                            itemEntity.getStart_time(),itemEntity.getEnd_time());
+                    playingItem.setPlayUrl(playUrl);
+                    playingItem.setProgramName(itemEntity.getTitle());
+                    playingList.add(playingItem);
+                }
+                PlayUtil.setPlayingList(playingList);
+                context.startService(new Intent(context, PlayUtil.class));
+                context.startActivity(intent);
+            }
+        });
     }
 
 

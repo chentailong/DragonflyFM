@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +39,7 @@ import okhttp3.ResponseBody;
  * 2020/7/15
  **/
 
-public class ProgramActivity extends BaseActivity {
+public class ProgramActivity extends AppCompatActivity {
 
     private final static String TAG = "ProgramActivity";
     private TextView TvPrevious;

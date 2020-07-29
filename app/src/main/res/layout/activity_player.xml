@@ -70,6 +70,7 @@
 
         <!--进度条和时间-->
         <RelativeLayout
+            android:layout_margin="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -109,6 +110,7 @@
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:layout_marginTop="40dp"
+            android:layout_margin="10sp"
             android:layout_height="wrap_content">
 
             <ImageView

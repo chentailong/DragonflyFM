@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import net.along.fragonflyfm.Constants.Constants;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.fragment.AwaitFragment;
-import net.along.fragonflyfm.util.GetFMItemJsonService;
+import net.along.fragonflyfm.util.FMItemJsonUtil;
 import net.along.fragonflyfm.util.JSONUtils;
 import net.lzzy.commutils.BaseActivity;
 
@@ -60,7 +60,7 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
     }
 
     private void startService() {
-        Intent getFmItemJs = new Intent(this, GetFMItemJsonService.class);
+        Intent getFmItemJs = new Intent(this, FMItemJsonUtil.class);
         startService(getFmItemJs);
     }
 

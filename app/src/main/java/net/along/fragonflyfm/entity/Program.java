@@ -6,7 +6,7 @@ public class Program {
     private int id;
     private String start_time;
     private String end_time;
-    private int duration;
+    private String duration;
     private int chatgroup_id;
     private int res_id;
     private int day;
@@ -41,11 +41,11 @@ public class Program {
         this.end_time = end_time;
     }
 
-    public int getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 

@@ -13,12 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <service
-            android:name=".util.GetFMItemJsonService"
-            android:enabled="true" />
 
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.ProgramActivity" />
+        <activity android:name=".activities.PlayerActivity" />
         <activity android:name=".activities.AwaitActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +30,13 @@
             android:name=".util.JSONUtils"
             android:enabled="true" />
 
+        <service
+            android:name=".util.FMItemJsonUtil"
+            android:enabled="true" />
 
+        <service
+            android:name=".util.PlayUtil"
+            android:enabled="true" />
     </application>
 
 </manifest>

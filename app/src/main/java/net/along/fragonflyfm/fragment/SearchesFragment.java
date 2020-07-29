@@ -26,7 +26,7 @@ import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.adapter.SearchesAdapter;
 import net.along.fragonflyfm.base.BaseFragment;
 import net.along.fragonflyfm.entity.SearchesData;
-import net.along.fragonflyfm.util.GetFMItemJsonService;
+import net.along.fragonflyfm.util.FMItemJsonUtil;
 import net.along.fragonflyfm.util.JSONUtils;
 
 import org.json.JSONArray;
@@ -112,7 +112,7 @@ public class SearchesFragment extends BaseFragment {
         Region.setAdapter(adapter);
         Region.setOnItemClickListener((parent, v, i, id) -> {
             tv_location.setText(province.get(i));
-            Intent intent = new Intent(getActivity(), GetFMItemJsonService.class);
+            Intent intent = new Intent(getActivity(), FMItemJsonUtil.class);
             try {
                 JSONObject district = jsonData.getJSONObject(i);
                 intent.putExtra("provinceId", district.getInt("id"));
@@ -129,7 +129,7 @@ public class SearchesFragment extends BaseFragment {
      * 显示地区电台
      */
     private void showFM() {
-        JSONArray fmItemJson = GetFMItemJsonService.getLastGetJson();
+        JSONArray fmItemJson = FMItemJsonUtil.getLastGetJson();
         Log.d(TAG, "showFM: " + fmItemJson);
         if (fmItemJson == null) {
             Toast.makeText(getActivity(), "获取电台数据失败", Toast.LENGTH_SHORT).show();
