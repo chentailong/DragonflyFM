@@ -24,7 +24,6 @@
             app:queryHint="请输入关键字" />
 
 
-
         <TextView
             android:id="@+id/fragment_searches_location"
             android:layout_width="match_parent"
@@ -45,15 +44,20 @@
         android:id="@+id/fragment_searches_mask"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fm_recycler_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fm_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"/>
 
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

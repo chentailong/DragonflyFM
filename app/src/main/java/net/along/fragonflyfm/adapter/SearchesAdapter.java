@@ -2,16 +2,18 @@ package net.along.fragonflyfm.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -20,8 +22,8 @@ import com.google.gson.reflect.TypeToken;
 
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.ProgramActivity;
-import net.along.fragonflyfm.base.DownloadData;
 import net.along.fragonflyfm.entity.SearchesData;
+import net.along.fragonflyfm.util.GetFMItemJsonService;
 
 import org.json.JSONArray;
 
@@ -33,7 +35,7 @@ import java.util.List;
  * 2020/7/13
  **/
 
-public class SearchesAdapter extends RecyclerView.Adapter {
+public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "SearchesAdapter";
     protected List<SearchesData> data;
     private int flag = 0;
@@ -57,7 +59,7 @@ public class SearchesAdapter extends RecyclerView.Adapter {
             return holder;
         }
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CardViewHolder) {
@@ -66,48 +68,46 @@ public class SearchesAdapter extends RecyclerView.Adapter {
             ((CardViewHolder) holder).titleTextView.setText(fmCardView.getTitle());
             Glide.with(context).load(fmCardView.getCover()).into(((CardViewHolder) holder).coverImg);
             ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
-            ((CardViewHolder) holder).Lv_view.setOnClickListener(new View.OnClickListener() {
+            ((CardViewHolder) holder).card_view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent toPlayList = new Intent(context, ProgramActivity.class);
-                    toPlayList.putExtra("cover", fmCardView.getCover());
-                    toPlayList.putExtra("channelName", fmCardView.getTitle());
-                    toPlayList.putExtra("previous", fmCardView.getRegion().getTitle());
-                    toPlayList.putExtra("channel", fmCardView.getTitle());
-                    toPlayList.putExtra("channel_id", fmCardView.getContent_id());
-                    context.startActivity(toPlayList);
+                    Intent toProgramList = new Intent(context, ProgramActivity.class);
+                    toProgramList.putExtra("cover", fmCardView.getCover());
+                    toProgramList.putExtra("channelName", fmCardView.getTitle());
+                    toProgramList.putExtra("previous", fmCardView.getRegion().getTitle());
+                    toProgramList.putExtra("channel", fmCardView.getTitle());
+                    toProgramList.putExtra("channel_id", fmCardView.getContent_id());
+                    toProgramList.putExtra("audience_count",fmCardView.getAudience_count());
+
+                    context.startActivity(toProgramList);
                 }
             });
-            ((CardViewHolder) holder).favorImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switch (flag) {
-                        case  0:
-                            Toast.makeText(context, "你收藏了这个电台", Toast.LENGTH_SHORT).show();
-                            ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_collect);
-                            flag=1;
-                            break;
-                        case 1:
-                            Toast.makeText(context, "你取消收藏了这个电台", Toast.LENGTH_SHORT).show();
-                            ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
-                            flag=0;
-                            break;
-                    }
+            ((CardViewHolder) holder).favorImg.setOnClickListener(view -> {
+                switch (flag) {
+                    case  0:
+                        Toast.makeText(context, "你收藏了这个电台", Toast.LENGTH_SHORT).show();
+                        ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_collect);
+                        flag=1;
+                        break;
+                    case 1:
+                        Toast.makeText(context, "你取消收藏了这个电台", Toast.LENGTH_SHORT).show();
+                        ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
+                        flag=0;
+                        break;
                 }
             });
         }
     }
 
 
-    public void upData() {
-        JSONArray array = DownloadData.GetJSON();
-        Gson gson = new Gson();
-        List<SearchesData> list =
-                gson.fromJson(array.toString(), new TypeToken<List<SearchesData>>() {}.getType());
-        this.data = list;
+    public void upData(){
+        JSONArray array= GetFMItemJsonService.getLastGetJson();
+        Gson gson=new Gson();
+        List<SearchesData> list=
+                gson.fromJson(array.toString(), new TypeToken<List<SearchesData>>(){}.getType());
+        this.data= list;
         notifyDataSetChanged();
     }
-
     @Override
     public int getItemViewType(int position) {
         if (position == data.size()) {
@@ -129,7 +129,7 @@ public class SearchesAdapter extends RecyclerView.Adapter {
         TextView titleTextView;
         ImageView favorImg;
         TextView listeners;
-        LinearLayout Lv_view;
+        CardView card_view;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -137,7 +137,7 @@ public class SearchesAdapter extends RecyclerView.Adapter {
             titleTextView = itemView.findViewById(R.id.fragment_searches_station_name);
             favorImg = itemView.findViewById(R.id.fragment_searches_collection);
             listeners = itemView.findViewById(R.id.fragment_searches_number_of_listeners);
-            Lv_view = itemView.findViewById(R.id.Lv_view);
+            card_view = itemView.findViewById(R.id.card_view);
         }
     }
 

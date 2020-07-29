@@ -25,36 +25,36 @@ import java.util.List;
 
 public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramItem> {
     private List<Program> mProgram;
-    private Context mContext;
+    private Context context;
 
 
-    public ProgramAdapter(Context context,List<Program> mProgram){
-        this.mProgram=mProgram;
-        this.mContext=context;
+    public ProgramAdapter(Context context, List<Program> mProgram) {
+        this.mProgram = mProgram;
+        this.context = context;
     }
 
 
     @NonNull
     @Override
     public ProgramItem onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.program_list,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.program_list_view, parent, false);
         ProgramItem item = new ProgramItem(view);
         return item;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProgramItem holder, int position) {
-        final Program entity=mProgram.get(position);
-        holder.countView.setText("2345");
-        List<Broadcasters>broadcasters=entity.getBroadcasters();
-        String host="";
-        for (Broadcasters hostObj:broadcasters){
-            host=host+"  "+hostObj.getUsername();
+        final Program entity = mProgram.get(position);
+        List<Broadcasters> broadcasters = entity.getBroadcasters();
+        String host = "";
+        for (Broadcasters hostObj : broadcasters) {
+            host = host + "  " + hostObj.getUsername();
         }
+        holder.audience_count.setText("123456");
         holder.hostView.setText(host);
         holder.stateImg.setImageResource(R.drawable.ic_trumpet);
         holder.titleView.setText(entity.getTitle());
-        holder.durationView.setText("["+entity.getStart_time()+"-"+entity.getEnd_time()+"]");
+        holder.durationView.setText("[" + entity.getStart_time() + "-" + entity.getEnd_time() + "]");
 
         final String finalHost = host;
 //        holder.mRelativeLayout.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +104,7 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
         ImageView stateImg;
         TextView titleView;
         TextView hostView;
-        TextView countView;
+        TextView audience_count;
         TextView durationView;
         RelativeLayout mRelativeLayout;
 
@@ -114,7 +114,7 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
             stateImg = itemView.findViewById(R.id.program_trumpet_imageView);
             titleView = itemView.findViewById(R.id.program_title);
             hostView = itemView.findViewById(R.id.program_username);
-            countView = itemView.findViewById(R.id.program_people);
+            audience_count = itemView.findViewById(R.id.audience_count);
             durationView = itemView.findViewById(R.id.program_duration);
             mRelativeLayout = itemView.findViewById(R.id.relativeLayout);
         }

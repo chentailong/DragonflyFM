@@ -13,7 +13,6 @@ public class GetTime {
     public static String getDate(){
         int year=calendar.get(Calendar.YEAR);
         int monthInt=1+calendar.get(Calendar.MONTH);
-        //int monthInt=9;
         String month=monthInt>9?monthInt+"":"0"+monthInt;
         int day=calendar.get(Calendar.DAY_OF_MONTH);
         return ""+year+month+day;

@@ -17,6 +17,7 @@ import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.adapter.ProgramAdapter;
 import net.along.fragonflyfm.base.CommonHttpRequest;
 import net.along.fragonflyfm.base.GetTime;
+import net.along.fragonflyfm.base.ProgramItemDecoration;
 import net.along.fragonflyfm.entity.Program;
 
 import org.json.JSONArray;
@@ -63,6 +64,7 @@ public class ProgramActivity extends BaseActivity {
      */
     private void initView() {
         this.findViewById(R.id.play_list_return).setOnClickListener(onClickListener);  //返回键
+        this.findViewById(R.id.play_list_previous).setOnClickListener(onClickListener);
         TvPrevious = this.findViewById(R.id.play_list_previous);  //返回
         TvName = this.findViewById(R.id.program_name);   //电台节目名称
         mRecyclerView = this.findViewById(R.id.play_list_program);
@@ -76,7 +78,7 @@ public class ProgramActivity extends BaseActivity {
     private void inData() {
         cover = getIntent().getStringExtra("cover");
         channelName = getIntent().getStringExtra("channelName");
-        channelId = getIntent().getIntExtra("channel_id", 4875);
+        channelId = getIntent().getIntExtra("channel_id", 20697);
         final int dayOFWeek = GetTime.dayOFWeek();
         final String baseUrl = "https://rapi.qingting.fm/v2/channels/" + channelId + "/playbills?day=" + dayOFWeek;
         final AlertDialog loadingDialog = new AlertDialog.Builder(ProgramActivity.this).create();
@@ -86,37 +88,30 @@ public class ProgramActivity extends BaseActivity {
         CommonHttpRequest.getHttp(baseUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(ProgramActivity.this, "获取电台数据失败", Toast.LENGTH_SHORT).show();
-                        loadingDialog.dismiss();
-                    }
+                runOnUiThread(() -> {
+                    Toast.makeText(ProgramActivity.this, "获取电台数据失败", Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismiss();
                 });
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                ResponseBody responseBody= response.body();
+            public void onResponse(Call call, Response response) {
+                ResponseBody responseBody = response.body();
                 try {
-                    JSONObject rootJson=new JSONObject(responseBody.string());
-                    JSONObject dataObj=rootJson.getJSONObject("data");
-                    JSONArray dayJson=dataObj.getJSONArray(""+dayOFWeek);
-                    Gson gson=new Gson();
-                    mPrograms=
-                            gson.fromJson(dayJson.toString(),new TypeToken<List<Program>>(){}.getType());
+                    JSONObject rootJson = new JSONObject(responseBody.string());
+                    JSONObject dataObj = rootJson.getJSONObject("data");
+                    JSONArray dayJson = dataObj.getJSONArray("" + dayOFWeek);
+                    Gson gson = new Gson();
+                    mPrograms = gson.fromJson(dayJson.toString(), new TypeToken<List<Program>>() {}.getType());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(ProgramActivity.this, "获取电台数据成功", Toast.LENGTH_SHORT).show();
-                        loadingDialog.dismiss();
-                        showPlayList();
-                    }
+                runOnUiThread(() -> {
+//                    Toast.makeText(ProgramActivity.this, "获取电台数据成功", Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismiss();
+                    showPlayList();
                 });
 
             }
@@ -124,23 +119,20 @@ public class ProgramActivity extends BaseActivity {
     }
 
     private void showPlayList() {
-        ProgramAdapter programAdapter=new ProgramAdapter(this,mPrograms);
-        LinearLayoutManager manager=new LinearLayoutManager(this);
+        ProgramAdapter programAdapter = new ProgramAdapter(this, mPrograms);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
-//        mRecyclerView.addItemDecoration(new ProgramItemDecoration());
+        mRecyclerView.addItemDecoration(new ProgramItemDecoration());
         mRecyclerView.setAdapter(programAdapter);
     }
 
 
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.play_list_previous:
-                case R.id.play_list_return:
-                    finish();
-                    break;
-            }
+    private View.OnClickListener onClickListener = v -> {
+        switch (v.getId()) {
+            case R.id.play_list_previous:
+            case R.id.play_list_return:
+                finish();
+                break;
         }
     };
 

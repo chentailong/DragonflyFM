@@ -21,8 +21,8 @@ public class CommonHttpRequest {
         OkHttpClient okHttpClient=new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
         try {
-
-           return okHttpClient.newCall(request).execute();
+            Response response=okHttpClient.newCall(request).execute();
+           return response;
         } catch (IOException e) {
             e.printStackTrace();
         }

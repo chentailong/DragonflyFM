@@ -1,5 +1,6 @@
 package net.along.fragonflyfm.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -7,9 +8,9 @@ import android.widget.RadioGroup;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import net.along.fragonflyfm.Constants.Constants;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.adapter.IndicatorAdapter;
-import net.along.fragonflyfm.Constants.Constants;
 
 
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         setContentView(R.layout.activity_main);
         initView();
     }
+
 
     private void initView() {
         mAdapter = new IndicatorAdapter(getSupportFragmentManager()); //将适配器绑定于FragmentAdapter，用于数据的更新
@@ -104,5 +106,14 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                     break;
             }
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent home = new Intent(Intent.ACTION_MAIN);
+        home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        home.addCategory(Intent.CATEGORY_HOME);
+        startActivity(home);
     }
 }

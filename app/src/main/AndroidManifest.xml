@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.along.fragonflyfm">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -17,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <service
+            android:name=".util.GetFMItemJsonService"
+            android:enabled="true" />
+
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.ProgramActivity" />
         <activity android:name=".activities.AwaitActivity">
@@ -29,12 +29,9 @@
         </activity>
 
         <service
-            android:name=".base.DownloadData"
-            android:enabled="true" />
-
-        <service
             android:name=".util.JSONUtils"
             android:enabled="true" />
+
 
     </application>
 

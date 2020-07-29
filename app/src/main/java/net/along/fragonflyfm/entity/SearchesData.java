@@ -10,10 +10,9 @@ public class SearchesData {
     private String cover;
     private String title;
     private String description;
-
     private NowPlaying nowplaying;
 
-    private int audience_count;
+    private String audience_count;
     private String liveShow_id;
     private String update_time;
 
@@ -69,11 +68,11 @@ public class SearchesData {
         this.nowplaying = nowplaying;
     }
 
-    public int getAudience_count() {
+    public String getAudience_count() {
         return audience_count;
     }
 
-    public void setAudience_count(int audience_count) {
+    public void setAudience_count(String audience_count) {
         this.audience_count = audience_count;
     }
 
