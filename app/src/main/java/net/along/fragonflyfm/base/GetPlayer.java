@@ -10,12 +10,13 @@ import java.io.IOException;
 public class GetPlayer {
     private MediaPlayer fmPlay;
     private int currentIndex = 0;
+    private String TAG = "GetPlayer";
 
     public void playUrl(String url) {
         fmPlay = new MediaPlayer();
         try {
             fmPlay.setDataSource(url);
-            Log.e("MyPlayer", url);
+            Log.e(TAG, "playUrl: " + url );
             fmPlay.prepare();
             fmPlay.start();
             PlayUtil.IS_SERVICING = true;

@@ -14,7 +14,6 @@ public class PlayUtil extends IntentService {
 
     public static boolean IS_SERVICING=false;
     private static List<Player> PLAYER;
-    private static boolean RUNNING=false;
     private static GetPlayer myPlayer;
 
     public PlayUtil(String name) {

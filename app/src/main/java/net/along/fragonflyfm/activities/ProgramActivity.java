@@ -110,7 +110,6 @@ public class ProgramActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 runOnUiThread(() -> {
-//                    Toast.makeText(ProgramActivity.this, "获取电台数据成功", Toast.LENGTH_SHORT).show();
                     loadingDialog.dismiss();
                     showPlayList();
                 });

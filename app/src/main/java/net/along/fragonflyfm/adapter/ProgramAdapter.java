@@ -57,7 +57,8 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
         for (Broadcasters hostObj : broadcasters) {
             host = host + "  " + hostObj.getUsername();
         }
-        holder.audience_count.setText(entity.getDuration());
+        String audience_counts = String.valueOf(entity.getDuration());
+        holder.audience_count.setText(audience_counts);
         holder.hostView.setText(host);
         holder.stateImg.setImageResource(R.drawable.ic_trumpet);
         holder.titleView.setText(entity.getTitle());
