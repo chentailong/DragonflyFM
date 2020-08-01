@@ -1,9 +1,10 @@
-package net.along.fragonflyfm.base;
+package net.along.fragonflyfm.util;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 
-import net.along.fragonflyfm.util.PlayUtil;
+import net.along.fragonflyfm.service.PlayUtil;
 
 import java.io.IOException;
 
@@ -14,6 +15,7 @@ public class GetPlayer {
 
     public void playUrl(String url) {
         fmPlay = new MediaPlayer();
+        fmPlay.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             fmPlay.setDataSource(url);
             Log.e(TAG, "playUrl: " + url );

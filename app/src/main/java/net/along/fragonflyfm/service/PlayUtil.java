@@ -1,11 +1,11 @@
-package net.along.fragonflyfm.util;
+package net.along.fragonflyfm.service;
 
 import android.app.IntentService;
 import android.content.Intent;
 
 import androidx.annotation.Nullable;
 
-import net.along.fragonflyfm.base.GetPlayer;
+import net.along.fragonflyfm.util.GetPlayer;
 import net.along.fragonflyfm.entity.Player;
 
 import java.util.List;

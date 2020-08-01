@@ -1,4 +1,4 @@
-package net.along.fragonflyfm.util;
+package net.along.fragonflyfm.service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import net.along.fragonflyfm.base.CommonHttpRequest;
+import net.along.fragonflyfm.util.CommonHttpRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,8 +48,6 @@ public class FMItemJsonUtil extends IntentService {
             JSONObject dataJson=new JSONObject(jsonData);
             JSONArray item=dataJson.getJSONObject("Data").getJSONArray("items");
             LAST_GET_JSON=item;
-            Log.e("获取结果",item.toString());
-
         }
       catch (IOException | JSONException e) {
             e.printStackTrace();

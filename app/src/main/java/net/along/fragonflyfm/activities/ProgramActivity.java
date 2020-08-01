@@ -16,8 +16,8 @@ import com.google.gson.reflect.TypeToken;
 
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.adapter.ProgramAdapter;
-import net.along.fragonflyfm.base.CommonHttpRequest;
-import net.along.fragonflyfm.base.GetTime;
+import net.along.fragonflyfm.util.CommonHttpRequest;
+import net.along.fragonflyfm.util.GetTime;
 import net.along.fragonflyfm.base.ProgramItemDecoration;
 import net.along.fragonflyfm.entity.Program;
 

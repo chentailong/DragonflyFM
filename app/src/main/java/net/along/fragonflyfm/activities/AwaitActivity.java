@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment;
 import net.along.fragonflyfm.Constants.Constants;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.fragment.AwaitFragment;
-import net.along.fragonflyfm.util.FMItemJsonUtil;
-import net.along.fragonflyfm.util.JSONUtils;
+import net.along.fragonflyfm.service.FMItemJsonUtil;
+import net.along.fragonflyfm.service.JSONUtils;
 import net.lzzy.commutils.BaseActivity;
 
 import java.util.Timer;

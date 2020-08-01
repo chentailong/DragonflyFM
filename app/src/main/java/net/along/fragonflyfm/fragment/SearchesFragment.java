@@ -26,8 +26,8 @@ import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.adapter.SearchesAdapter;
 import net.along.fragonflyfm.base.BaseFragment;
 import net.along.fragonflyfm.entity.SearchesData;
-import net.along.fragonflyfm.util.FMItemJsonUtil;
-import net.along.fragonflyfm.util.JSONUtils;
+import net.along.fragonflyfm.service.FMItemJsonUtil;
+import net.along.fragonflyfm.service.JSONUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.ProgramActivity;
 import net.along.fragonflyfm.entity.SearchesData;
-import net.along.fragonflyfm.util.FMItemJsonUtil;
+import net.along.fragonflyfm.service.FMItemJsonUtil;
 
 import org.json.JSONArray;
 

@@ -1,4 +1,4 @@
-package net.along.fragonflyfm.util;
+package net.along.fragonflyfm.service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import net.along.fragonflyfm.base.CommonHttpRequest;
+import net.along.fragonflyfm.util.CommonHttpRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;

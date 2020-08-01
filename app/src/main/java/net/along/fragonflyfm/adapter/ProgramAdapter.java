@@ -15,11 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.PlayerActivity;
 import net.along.fragonflyfm.activities.ProgramActivity;
-import net.along.fragonflyfm.base.GetTime;
+import net.along.fragonflyfm.util.GetTime;
 import net.along.fragonflyfm.entity.Broadcasters;
 import net.along.fragonflyfm.entity.Player;
 import net.along.fragonflyfm.entity.Program;
-import net.along.fragonflyfm.util.PlayUtil;
+import net.along.fragonflyfm.service.PlayUtil;
 
 import java.util.ArrayList;
 import java.util.List;

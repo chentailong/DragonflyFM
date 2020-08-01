@@ -20,6 +20,7 @@ import net.along.fragonflyfm.R;
  **/
 
 public class PlayerActivity extends AppCompatActivity {
+    private ImageView returnImageView;
     private TextView returnName;
     private ImageView fmCoverImg;
     private TextView title;
@@ -27,6 +28,9 @@ public class PlayerActivity extends AppCompatActivity {
     private TextView start;
     private TextView end;
     private SeekBar mSeekBar;
+    private ImageView previous; //上一首
+    private ImageView next;  //下一首
+    private ImageView play;
     private static String ChannelName;
     private static String CoverUrl;
     private static String Title;
@@ -39,22 +43,21 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        initView();
         initData();
+        initView();
     }
 
     /**
      * 数据显示
      */
     private void initData() {
-        CoverUrl = getIntent().getStringExtra("cover") == null ? CoverUrl : getIntent().getStringExtra("cover");
-        ChannelName = getIntent().getStringExtra("channelName") == null ? ChannelName : getIntent().getStringExtra("channelName");
-        Broadcaster = getIntent().getStringExtra("broadcaster") == null ? Broadcaster : getIntent().getStringExtra("broadcaster");
-        Title = getIntent().getStringExtra("title") == null ? Title : getIntent().getStringExtra("title");
-        Start_Time = getIntent().getStringExtra("start_time") == null ? Start_Time : getIntent().getStringExtra("start_time");
-        Ent_Time = getIntent().getStringExtra("end_time") == null ? Ent_Time : getIntent().getStringExtra("end_time");
-        Duration = getIntent().getIntExtra("duration", 0) == 0 ? Duration :
-                getIntent().getIntExtra("duration", 0) / 60;
+        CoverUrl = getIntent().getStringExtra("cover");
+        ChannelName = getIntent().getStringExtra("channelName");
+        Broadcaster = getIntent().getStringExtra("broadcaster");
+        Title = getIntent().getStringExtra("title");
+        Start_Time = getIntent().getStringExtra("start_time");
+        Ent_Time = getIntent().getStringExtra("end_time");
+        Duration = getIntent().getIntExtra("duration", 0) / 60;
     }
 
     /**
@@ -62,6 +65,7 @@ public class PlayerActivity extends AppCompatActivity {
      */
     private void initView() {
         this.findViewById(R.id.activity_player_return).setOnClickListener(mOnClickListener); //返回
+        returnImageView = this.findViewById(R.id.activity_player_return);
         returnName = this.findViewById(R.id.activity_station_name);
         returnName.setOnClickListener(mOnClickListener);
         fmCoverImg = this.findViewById(R.id.activity_player_radio_pictures);
@@ -70,14 +74,23 @@ public class PlayerActivity extends AppCompatActivity {
         start = this.findViewById(R.id.activity_start_position);
         end = this.findViewById(R.id.activity_end_positions);
         mSeekBar = this.findViewById(R.id.activity_track_seek_bar);
+        previous = this.findViewById(R.id.activity_play_left);
+        next = this.findViewById(R.id.activity_play_right);
+        play = this.findViewById(R.id.activity_play_pause_playback);
 
+        //数据显示
         start.setText(Start_Time);
         end.setText(Ent_Time);
         title.setText(Title);
-        userName.setText(Broadcaster);
+        userName.setText("主播："+Broadcaster);
         returnName.setText(ChannelName);
         mSeekBar.setMax(Duration);
-        Glide.with(this).load(CoverUrl).error(R.drawable.kl).into(fmCoverImg);
+        returnImageView.setImageResource(R.drawable.ic_retuenimage);
+        previous.setImageResource(R.drawable.qh2);
+        next.setImageResource(R.drawable.qh1);
+        play.setImageResource(R.drawable.zt);
+        Glide.with(this).load(CoverUrl).into(fmCoverImg);
+
     }
 
     /**
