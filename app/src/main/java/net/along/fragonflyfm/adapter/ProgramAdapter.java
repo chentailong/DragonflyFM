@@ -65,39 +65,36 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
         holder.durationView.setText("[" + entity.getStart_time() + "-" + entity.getEnd_time() + "]");
 
         final String finalHost = host;
-        holder.mRelativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(context, PlayerActivity.class);
-                intent.putExtra("channelName",((ProgramActivity)context).channelName);
-                intent.putExtra("cover",((ProgramActivity)context).cover);
-                intent.putExtra("title",entity.getTitle());
-                intent.putExtra("broadcaster", finalHost);
-                intent.putExtra("start_time",entity.getStart_time());
-                intent.putExtra("end_time",entity.getEnd_time());
-                intent.putExtra("duration",entity.getDuration());
+        holder.mRelativeLayout.setOnClickListener(view -> {
+            Intent intent = new Intent(context, PlayerActivity.class);
+            intent.putExtra("channelName", ((ProgramActivity) context).channelName);
+            intent.putExtra("cover", ((ProgramActivity) context).cover);
+            intent.putExtra("title", entity.getTitle());
+            intent.putExtra("broadcaster", finalHost);
+            intent.putExtra("start_time", entity.getStart_time());
+            intent.putExtra("end_time", entity.getEnd_time());
+            intent.putExtra("duration", entity.getDuration());
 
-                List<Player> playingList=new ArrayList<>();
-                for(Program itemEntity:mProgram){
-                    Player playingItem=new Player();
-                    String host="";
-                    for (Broadcasters hostObj:itemEntity.getBroadcasters()){
-                        host=host+"  "+hostObj.getUsername();
-                    }
-                    playingItem.setBroadcasters(host);
-                    playingItem.setChannelId(((ProgramActivity)context).channelId);
-                    playingItem.setPlayUrl(itemEntity.getStart_time());
-                    playingItem.setEndTime(itemEntity.getEnd_time());
-                    String playUrl= GetTime.changeToPlayUrl(((ProgramActivity)context).channelId,
-                            itemEntity.getStart_time(),itemEntity.getEnd_time());
-                    playingItem.setPlayUrl(playUrl);
-                    playingItem.setProgramName(itemEntity.getTitle());
-                    playingList.add(playingItem);
+            List<Player> playingList = new ArrayList<>();
+            for (Program itemEntity : mProgram) {
+                Player playingItem = new Player();
+                String host1 = "";
+                for (Broadcasters hostObj : itemEntity.getBroadcasters()) {
+                    host1 = host1 + "  " + hostObj.getUsername();
                 }
-                PlayUtil.setPlayingList(playingList);
-                context.startService(new Intent(context, PlayUtil.class));
-                context.startActivity(intent);
+                playingItem.setBroadcasters(host1);
+                playingItem.setChannelId(((ProgramActivity) context).channelId);
+                playingItem.setPlayUrl(itemEntity.getStart_time());
+                playingItem.setEndTime(itemEntity.getEnd_time());
+                String playUrl = GetTime.changeToPlayUrl(((ProgramActivity) context).channelId,
+                        itemEntity.getStart_time(), itemEntity.getEnd_time());
+                playingItem.setPlayUrl(playUrl);
+                playingItem.setProgramName(itemEntity.getTitle());
+                playingList.add(playingItem);
             }
+            PlayUtil.setPlayingList(playingList);
+            context.startService(new Intent(context, PlayUtil.class));
+            context.startActivity(intent);
         });
     }
 

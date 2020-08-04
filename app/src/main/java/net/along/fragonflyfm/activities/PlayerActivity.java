@@ -63,8 +63,8 @@ public class PlayerActivity extends AppCompatActivity {
     /**
      * 初始化组件
      */
-    private void initView() {
-        this.findViewById(R.id.activity_player_return).setOnClickListener(mOnClickListener); //返回
+    public void initView() {
+        this.findViewById(R.id.activity_player_return).setOnClickListener(mOnClickListener);
         returnImageView = this.findViewById(R.id.activity_player_return);
         returnName = this.findViewById(R.id.activity_station_name);
         returnName.setOnClickListener(mOnClickListener);
@@ -82,7 +82,7 @@ public class PlayerActivity extends AppCompatActivity {
         start.setText(Start_Time);
         end.setText(Ent_Time);
         title.setText(Title);
-        userName.setText("主播："+Broadcaster);
+        userName.setText("主播：" + Broadcaster);
         returnName.setText(ChannelName);
         mSeekBar.setMax(Duration);
         returnImageView.setImageResource(R.drawable.ic_retuenimage);
@@ -92,6 +92,8 @@ public class PlayerActivity extends AppCompatActivity {
         Glide.with(this).load(CoverUrl).into(fmCoverImg);
 
     }
+
+
 
     /**
      * 返回上一层

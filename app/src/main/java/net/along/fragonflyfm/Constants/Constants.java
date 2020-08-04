@@ -27,4 +27,7 @@ public class Constants {
     public static final int WHAT_SERVER_OFF = 3;
     //加载时间
     public static int seconds = 5;
+
+    public static int displayWidth;  //屏幕宽度
+    public static int displayHeight; //屏幕高度
 }

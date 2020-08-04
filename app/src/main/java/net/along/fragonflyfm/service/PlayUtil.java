@@ -29,6 +29,7 @@ public class PlayUtil extends IntentService {
         if (IS_SERVICING)return;
         myPlayer=new GetPlayer();
         myPlayer.playUrl(PLAYER.get(0).getPlayUrl());
+
     }
 
     public static void setPlayingList(List<Player> player) {

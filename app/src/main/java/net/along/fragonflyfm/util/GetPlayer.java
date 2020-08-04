@@ -9,7 +9,7 @@ import net.along.fragonflyfm.service.PlayUtil;
 import java.io.IOException;
 
 public class GetPlayer {
-    private MediaPlayer fmPlay;
+    private static MediaPlayer fmPlay;
     private int currentIndex = 0;
     private String TAG = "GetPlayer";
 
@@ -18,11 +18,11 @@ public class GetPlayer {
         fmPlay.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             fmPlay.setDataSource(url);
-            Log.e(TAG, "playUrl: " + url );
+            Log.e(TAG, "playUrl: "+ url);
             fmPlay.prepare();
             fmPlay.start();
             PlayUtil.IS_SERVICING = true;
-            fmPlay.setOnCompletionListener(mp -> {
+            fmPlay.setOnCompletionListener(mp -> {  //播放结束以后的监听事件
                 if (hasNext()) {
                     currentIndex++;
                     playUrl(PlayUtil.getPlayingList().get(currentIndex).getPlayUrl());
@@ -36,31 +36,19 @@ public class GetPlayer {
         }
     }
 
-    public boolean next() {
-        if (hasNext()) {
-            currentIndex++;
-            playUrl(PlayUtil.getPlayingList().get(currentIndex).getPlayUrl());
-            return true;
-        } else {
-            return false;
-        }
-    }
 
-    public boolean previous() {
-        if (currentIndex - 1 >= 0) {
-            currentIndex--;
-            playUrl(PlayUtil.getPlayingList().get(currentIndex).getPlayUrl());
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void stop() {
+    /**
+     * 停止播放
+     */
+    public  static void stop() {
         PlayUtil.IS_SERVICING = false;
         fmPlay.release();
     }
 
+    /**
+     * 是否有下一首
+     * @return
+     */
     public boolean hasNext() {
         if (currentIndex + 1 >= PlayUtil.getPlayingList().size()) {
             return false;

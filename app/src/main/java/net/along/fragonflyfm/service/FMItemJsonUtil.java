@@ -60,13 +60,12 @@ public class FMItemJsonUtil extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e("GetFMItemJsonService","数据下载服务结束");
+        Log.d(TAG, "onDestroy: 数据加载完成");
     }
 
     public static JSONArray getLastGetJson() {
         if (LAST_GET_JSON!=null)
         return LAST_GET_JSON;
-        Log.d(TAG, "getLastGetJson: ");
         return null;
     }
 }

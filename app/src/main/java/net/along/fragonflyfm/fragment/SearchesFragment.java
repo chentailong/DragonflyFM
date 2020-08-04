@@ -61,7 +61,7 @@ public class SearchesFragment extends BaseFragment {
 
     @Override
     protected View onSubViewLoaded(LayoutInflater inflater, ViewGroup container) {
-        mRootView = inflater.inflate(R.layout.fragment_searches,null);
+        mRootView = inflater.inflate(R.layout.fragment_searches, null);
         initView();
         inDialog();
         showFM();
@@ -91,7 +91,7 @@ public class SearchesFragment extends BaseFragment {
         choiceDialog = View.inflate(getActivity(), R.layout.choose_region_dialog, null);
         popupWindow.setContentView(choiceDialog);
         Region = choiceDialog.findViewById(R.id.dialog_list_view);
-       final List<String> province = new ArrayList<>();
+        final List<String> province = new ArrayList<>();
         //获取地区数据
         jsonData = JSONUtils.getDistrict();
         if (jsonData == null) {
@@ -139,6 +139,7 @@ public class SearchesFragment extends BaseFragment {
         List<SearchesData> list =
                 gson.fromJson(fmItemJson.toString(), new TypeToken<List<SearchesData>>() {
                 }.getType());
+
         mAdapter = new SearchesAdapter(getActivity(), list);
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 3);
         fmRecyclerView.setLayoutManager(manager);
@@ -146,14 +147,13 @@ public class SearchesFragment extends BaseFragment {
     }
 
 
-    private void updateFM(){
+    private void updateFM() {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 getActivity().runOnUiThread(() -> mAdapter.upData());
             }
-        },1000);
-
+        }, 1000);
     }
 
 
@@ -164,7 +164,6 @@ public class SearchesFragment extends BaseFragment {
         switch (v.getId()) {
             case R.id.fragment_searches_location:
                 showChooseProvinceWindow();
-                Log.d(TAG, "onClick: 你点击了选择地区事件");
                 break;
             case R.id.fragment_searches_mask:
                 shutDialog();
