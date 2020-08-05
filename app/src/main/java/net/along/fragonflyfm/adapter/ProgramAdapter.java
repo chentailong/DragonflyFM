@@ -15,11 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.PlayerActivity;
 import net.along.fragonflyfm.activities.ProgramActivity;
-import net.along.fragonflyfm.util.GetTime;
 import net.along.fragonflyfm.entity.Broadcasters;
 import net.along.fragonflyfm.entity.Player;
 import net.along.fragonflyfm.entity.Program;
 import net.along.fragonflyfm.service.PlayUtil;
+import net.along.fragonflyfm.util.GetTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +31,10 @@ import java.util.List;
  **/
 
 public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramItem> {
+    private static final String TAG = "ProgramAdapter";
     private List<Program> mProgram;
     private Context context;
-
+    private Player mPlayingItem;
 
     public ProgramAdapter(Context context, List<Program> mProgram) {
         this.mProgram = mProgram;
@@ -74,27 +75,27 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
             intent.putExtra("start_time", entity.getStart_time());
             intent.putExtra("end_time", entity.getEnd_time());
             intent.putExtra("duration", entity.getDuration());
-
             List<Player> playingList = new ArrayList<>();
             for (Program itemEntity : mProgram) {
-                Player playingItem = new Player();
+                mPlayingItem = new Player();
                 String host1 = "";
                 for (Broadcasters hostObj : itemEntity.getBroadcasters()) {
                     host1 = host1 + "  " + hostObj.getUsername();
                 }
-                playingItem.setBroadcasters(host1);
-                playingItem.setChannelId(((ProgramActivity) context).channelId);
-                playingItem.setPlayUrl(itemEntity.getStart_time());
-                playingItem.setEndTime(itemEntity.getEnd_time());
+                mPlayingItem.setBroadcasters(host1);
+                mPlayingItem.setChannelId(((ProgramActivity) context).channelId);
+                mPlayingItem.setStartTime(itemEntity.getStart_time());
+                mPlayingItem.setEndTime(itemEntity.getEnd_time());
                 String playUrl = GetTime.changeToPlayUrl(((ProgramActivity) context).channelId,
                         itemEntity.getStart_time(), itemEntity.getEnd_time());
-                playingItem.setPlayUrl(playUrl);
-                playingItem.setProgramName(itemEntity.getTitle());
-                playingList.add(playingItem);
+                mPlayingItem.setPlayUrl(playUrl);
+                mPlayingItem.setProgramName(itemEntity.getTitle());
+                playingList.add(mPlayingItem);
             }
             PlayUtil.setPlayingList(playingList);
             context.startService(new Intent(context, PlayUtil.class));
             context.startActivity(intent);
+
         });
     }
 
@@ -105,7 +106,6 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
     }
 
     class ProgramItem extends RecyclerView.ViewHolder {
-
         ImageView stateImg;
         TextView titleView;
         TextView hostView;

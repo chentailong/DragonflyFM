@@ -16,22 +16,23 @@ import okhttp3.Response;
  **/
 
 public class CommonHttpRequest {
-    private static MediaType type=MediaType.parse("application/json;charset=utf-8");
-    public static Response getHttp(String url){
-        OkHttpClient okHttpClient=new OkHttpClient();
+    private static MediaType type = MediaType.parse("application/json;charset=utf-8");
+
+    public static Response getHttp(String url) {
+        OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
         try {
-            Response response=okHttpClient.newCall(request).execute();
-           return response;
+            Response response = okHttpClient.newCall(request).execute();
+            return response;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static void getHttp(String url, Callback callback){
-        OkHttpClient okHttpClient=new OkHttpClient();
-        Request request=new Request.Builder().url(url).build();
+    public static void getHttp(String url, Callback callback) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
         okHttpClient.newCall(request).enqueue(callback);
     }
 

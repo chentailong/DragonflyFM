@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 
 import net.along.fragonflyfm.R;
+import net.along.fragonflyfm.service.PlayUtil;
 
 /**
  * 创建者 by:陈泰龙
@@ -20,6 +21,7 @@ import net.along.fragonflyfm.R;
  **/
 
 public class PlayerActivity extends AppCompatActivity {
+    private static final String TAG = "PlayerActivity";
     private ImageView returnImageView;
     private TextView returnName;
     private ImageView fmCoverImg;
@@ -39,16 +41,35 @@ public class PlayerActivity extends AppCompatActivity {
     private static String Ent_Time;
     private static int Duration;
 
+    private boolean isState = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         initData();
         initView();
+        initEvent();
+    }
+
+    private void initEvent() {
+        play.setOnClickListener(v -> {
+            if (isState == true) {
+                play.setImageResource(R.drawable.ic_play);
+                PlayUtil.stop();
+                isState =false;
+                return;
+            } else {
+                play.setImageResource(R.drawable.zt);
+                PlayUtil.pause();
+                isState = true;
+                return;
+            }
+        });
     }
 
     /**
-     * 数据显示
+     * 数据传输接受
      */
     private void initData() {
         CoverUrl = getIntent().getStringExtra("cover");
@@ -58,6 +79,8 @@ public class PlayerActivity extends AppCompatActivity {
         Start_Time = getIntent().getStringExtra("start_time");
         Ent_Time = getIntent().getStringExtra("end_time");
         Duration = getIntent().getIntExtra("duration", 0) / 60;
+        isState = PlayUtil.IS_SERVICING;
+
     }
 
     /**
@@ -90,9 +113,7 @@ public class PlayerActivity extends AppCompatActivity {
         next.setImageResource(R.drawable.qh1);
         play.setImageResource(R.drawable.zt);
         Glide.with(this).load(CoverUrl).into(fmCoverImg);
-
     }
-
 
 
     /**

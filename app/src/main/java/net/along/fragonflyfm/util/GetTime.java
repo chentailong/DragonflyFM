@@ -10,6 +10,13 @@ public class GetTime {
         return calendar.get(Calendar.DAY_OF_WEEK);
     }
 
+    public static String getTime() {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+        return "" + hour + minute + second;
+    }
+
     public static String getDate() {
         int year = calendar.get(Calendar.YEAR);
         int monthInt = 1 + calendar.get(Calendar.MONTH);

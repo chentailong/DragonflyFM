@@ -16,10 +16,9 @@ import com.google.gson.reflect.TypeToken;
 
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.adapter.ProgramAdapter;
+import net.along.fragonflyfm.entity.Program;
 import net.along.fragonflyfm.util.CommonHttpRequest;
 import net.along.fragonflyfm.util.GetTime;
-import net.along.fragonflyfm.base.ProgramItemDecoration;
-import net.along.fragonflyfm.entity.Program;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -122,7 +121,6 @@ public class ProgramActivity extends AppCompatActivity {
         ProgramAdapter programAdapter = new ProgramAdapter(this, mPrograms);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.addItemDecoration(new ProgramItemDecoration());
         mRecyclerView.setAdapter(programAdapter);
     }
 
