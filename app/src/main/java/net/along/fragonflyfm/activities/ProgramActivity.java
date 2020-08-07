@@ -1,6 +1,7 @@
 package net.along.fragonflyfm.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,9 +46,13 @@ public class ProgramActivity extends AppCompatActivity {
     private TextView TvName;
     private RecyclerView mRecyclerView;
     private List<Program> mPrograms;
+
     public String cover;
+    public String startTime;
     public String channelName;
     public int channelId;
+    public int count;
+    public int programId;
 
 
     @Override
@@ -76,7 +81,11 @@ public class ProgramActivity extends AppCompatActivity {
      * 加载电台数据
      */
     private void inData() {
+        startTime = getIntent().getStringExtra("startTime");
         cover = getIntent().getStringExtra("cover");
+        count = getIntent().getIntExtra("audience_count", 0);
+        Log.d(TAG, "inData: " + count);
+        programId = getIntent().getIntExtra("programId", 0);
         channelName = getIntent().getStringExtra("channelName");
         channelId = getIntent().getIntExtra("channel_id", 20697);
         final int dayOFWeek = GetTime.dayOFWeek();
@@ -102,10 +111,9 @@ public class ProgramActivity extends AppCompatActivity {
                     JSONObject dataObj = rootJson.getJSONObject("data");
                     JSONArray dayJson = dataObj.getJSONArray("" + dayOFWeek);
                     Gson gson = new Gson();
-                    mPrograms = gson.fromJson(dayJson.toString(), new TypeToken<List<Program>>() {}.getType());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                    mPrograms = gson.fromJson(dayJson.toString(), new TypeToken<List<Program>>() {
+                    }.getType());
+                } catch (JSONException | IOException e) {
                     e.printStackTrace();
                 }
                 runOnUiThread(() -> {

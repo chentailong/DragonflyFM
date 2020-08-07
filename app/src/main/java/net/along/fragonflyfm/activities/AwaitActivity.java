@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment;
 import net.along.fragonflyfm.Constants.Constants;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.fragment.AwaitFragment;
-import net.along.fragonflyfm.service.FMItemJsonUtil;
-import net.along.fragonflyfm.service.JSONUtils;
+import net.along.fragonflyfm.service.FMItemJsonService;
+import net.along.fragonflyfm.service.JSONService;
 import net.lzzy.commutils.BaseActivity;
 
 import java.util.Timer;
@@ -40,7 +40,7 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
         setContentView(R.layout.activity_await);
         startService();
         initVIew();
-        startService(new Intent(this, JSONUtils.class));
+        startService(new Intent(this, JSONService.class));
         mTimer.schedule(task, 1000, 1000);//等待时间一秒，停顿时间一秒
         mHandler = new Handler();
         mHandler.postDelayed(mRunnable = new Runnable() {
@@ -60,7 +60,7 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
     }
 
     private void startService() {
-        Intent getFmItemJs = new Intent(this, FMItemJsonUtil.class);
+        Intent getFmItemJs = new Intent(this, FMItemJsonService.class);
         startService(getFmItemJs);
     }
 

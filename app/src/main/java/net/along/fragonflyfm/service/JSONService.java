@@ -23,7 +23,7 @@ import okhttp3.ResponseBody;
  * 2020/7/15
  **/
 
-public class JSONUtils extends IntentService {
+public class JSONService extends IntentService {
 
     private static final String TAG = "JSONUtils";
     private static JSONArray district = null;  //所有地区JSON数据
@@ -36,11 +36,11 @@ public class JSONUtils extends IntentService {
      *
      * @param name Used to name the worker thread, important only for debugging.
      */
-    public JSONUtils(String name) {
+    public JSONService(String name) {
         super(name);
     }
 
-    public JSONUtils() {
+    public JSONService() {
         super("JSONUtils");
     }
 

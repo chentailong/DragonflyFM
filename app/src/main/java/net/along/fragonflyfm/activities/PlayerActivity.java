@@ -12,7 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 
 import net.along.fragonflyfm.R;
-import net.along.fragonflyfm.service.PlayUtil;
+import net.along.fragonflyfm.service.PlayService;
+import net.along.fragonflyfm.util.PlayUtil;
 
 /**
  * 创建者 by:陈泰龙
@@ -29,7 +30,7 @@ public class PlayerActivity extends AppCompatActivity {
     private TextView userName;
     private TextView start;
     private TextView end;
-    private SeekBar mSeekBar;
+    private SeekBar mSeekBar;   //进度条
     private ImageView previous; //上一首
     private ImageView next;  //下一首
     private ImageView play;
@@ -40,7 +41,6 @@ public class PlayerActivity extends AppCompatActivity {
     private static String Start_Time;
     private static String Ent_Time;
     private static int Duration;
-
     private boolean isState = false;
 
     @Override
@@ -57,7 +57,7 @@ public class PlayerActivity extends AppCompatActivity {
             if (isState == true) {
                 play.setImageResource(R.drawable.ic_play);
                 PlayUtil.stop();
-                isState =false;
+                isState = false;
                 return;
             } else {
                 play.setImageResource(R.drawable.zt);
@@ -72,15 +72,14 @@ public class PlayerActivity extends AppCompatActivity {
      * 数据传输接受
      */
     private void initData() {
-        CoverUrl = getIntent().getStringExtra("cover");
         ChannelName = getIntent().getStringExtra("channelName");
         Broadcaster = getIntent().getStringExtra("broadcaster");
         Title = getIntent().getStringExtra("title");
         Start_Time = getIntent().getStringExtra("start_time");
         Ent_Time = getIntent().getStringExtra("end_time");
         Duration = getIntent().getIntExtra("duration", 0) / 60;
-        isState = PlayUtil.IS_SERVICING;
-
+        CoverUrl = getIntent().getStringExtra("cover");
+        isState = PlayService.IS_SERVICING;
     }
 
     /**
@@ -107,7 +106,7 @@ public class PlayerActivity extends AppCompatActivity {
         title.setText(Title);
         userName.setText("主播：" + Broadcaster);
         returnName.setText(ChannelName);
-        mSeekBar.setMax(Duration);
+        mSeekBar.setMax(Duration);   //进度条
         returnImageView.setImageResource(R.drawable.ic_retuenimage);
         previous.setImageResource(R.drawable.qh2);
         next.setImageResource(R.drawable.qh1);
@@ -115,6 +114,10 @@ public class PlayerActivity extends AppCompatActivity {
         Glide.with(this).load(CoverUrl).into(fmCoverImg);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     /**
      * 返回上一层

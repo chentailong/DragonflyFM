@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 
+
+
     <application
         android:name=".util.AppUtils"
         android:allowBackup="true"
@@ -17,6 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
+        <meta-data android:name="DATABASE" android:value="sugar_example.db"/>
+        <meta-data android:name="VERSION" android:value="2"/>
+        <meta-data android:name="QUERY_LOG" android:value="true"/>
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="net.along.fragonflyfm.dataBase"/>
+
 
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.ProgramActivity" />
@@ -32,15 +40,15 @@
         </activity>
 
         <service
-            android:name=".service.JSONUtils"
+            android:name=".service.JSONService"
             android:enabled="true" />
 
         <service
-            android:name=".service.FMItemJsonUtil"
+            android:name=".service.FMItemJsonService"
             android:enabled="true" />
 
         <service
-            android:name=".service.PlayUtil"
+            android:name=".service.PlayService"
             android:enabled="true" />
     </application>
 

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:background="@color/colorWhite"
+        android:background="@color/white"
         android:orientation="horizontal">
 
         <ImageView
@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
+            android:visibility="gone"
             android:layout_toLeftOf="@+id/audience_count"
             android:background="@drawable/ic_peoples" />
 
@@ -54,7 +55,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
-            android:text="50" />
+            android:text="" />
 
         <ImageView
             android:id="@+id/program_microphone_imageView"

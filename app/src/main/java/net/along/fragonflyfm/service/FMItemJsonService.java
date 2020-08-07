@@ -20,17 +20,17 @@ import okhttp3.ResponseBody;
 /**
  * 用于下载指定地区的FM数据
  */
-public class FMItemJsonUtil extends IntentService {
+public class FMItemJsonService extends IntentService {
 
     private static JSONArray LAST_GET_JSON;
     private static String TAG = "GetFMItemJsonService";
 
 
-    public FMItemJsonUtil(String name) {
+    public FMItemJsonService(String name) {
         super(name);
     }
 
-    public FMItemJsonUtil() {
+    public FMItemJsonService() {
         super("GetFMItemJsonService");
     }
 

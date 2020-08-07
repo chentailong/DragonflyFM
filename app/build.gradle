@@ -54,4 +54,6 @@ dependencies {
     implementation project(path: ':sqllib')
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
+
+    implementation 'com.github.satyan:sugar:1.5'
 }

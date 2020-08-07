@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.ProgramActivity;
 import net.along.fragonflyfm.entity.SearchesData;
-import net.along.fragonflyfm.service.FMItemJsonUtil;
+import net.along.fragonflyfm.service.FMItemJsonService;
 
 import org.json.JSONArray;
 
@@ -68,19 +68,19 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((CardViewHolder) holder).titleTextView.setText(fmCardView.getTitle());
             Glide.with(context).load(fmCardView.getCover()).into(((CardViewHolder) holder).coverImg);
             ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
-            ((CardViewHolder) holder).card_view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent toProgramList = new Intent(context, ProgramActivity.class);
-                    toProgramList.putExtra("cover", fmCardView.getCover());
-                    toProgramList.putExtra("channelName", fmCardView.getTitle());
-                    toProgramList.putExtra("previous", fmCardView.getRegion().getTitle());
-                    toProgramList.putExtra("channel", fmCardView.getTitle());
-                    toProgramList.putExtra("channel_id", fmCardView.getContent_id());
-                    toProgramList.putExtra("audience_count",fmCardView.getAudience_count());
 
-                    context.startActivity(toProgramList);
-                }
+            ((CardViewHolder) holder).card_view.setOnClickListener(view -> {
+                Intent toProgramList = new Intent(context, ProgramActivity.class);
+                toProgramList.putExtra("cover", fmCardView.getCover());
+                toProgramList.putExtra("channelName", fmCardView.getTitle());
+                toProgramList.putExtra("previous", fmCardView.getRegion().getTitle());
+                toProgramList.putExtra("channel", fmCardView.getTitle());
+                toProgramList.putExtra("channel_id", fmCardView.getContent_id());
+                toProgramList.putExtra("audience_count",fmCardView.getAudience_count());
+                toProgramList.putExtra("startTime",fmCardView.getNowplaying().getStart_time());
+                toProgramList.putExtra("programId",fmCardView.getNowplaying().getId());
+
+                context.startActivity(toProgramList);
             });
             ((CardViewHolder) holder).favorImg.setOnClickListener(view -> {
                 switch (flag) {
@@ -101,7 +101,7 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
     public void upData(){
-        JSONArray array= FMItemJsonUtil.getLastGetJson();
+        JSONArray array= FMItemJsonService.getLastGetJson();
         Gson gson=new Gson();
         List<SearchesData> list=
                 gson.fromJson(array.toString(), new TypeToken<List<SearchesData>>(){}.getType());
