@@ -1,5 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
+repositories {
+    maven {
+        url uri('http://maven.qingting.fm/')
+    }
+    mavenCentral()
+}
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -14,25 +22,73 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'qtsdkdemo'
+            keyPassword '123456'
+            storeFile file('../QTSdkDemo.keystore')
+            storePassword '123456'
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+        }
+    }
+    // 统一三方库版本号，防止版本冲突
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            switch (requested.group) {
+            // 统一android support库版本（multidex除外），建议使用27.0.2以上
+                case 'com.android.support':
+                    if (!requested.name.startsWith("multidex")) {
+                        details.useVersion '27.0.2'
+                    }
+                    break
+            // 统一okhttp库版本，建议使用3.1.0以上
+                case 'com.squareup.okhttp3':
+                    details.useVersion '3.10.0'
+                    break
+            // 统一gson库版本，建议使用2.8.0以上
+                case 'com.google.code.gson':
+                    if (requested.name.startsWith("gson")) {
+                        details.useVersion '2.8.0'
+                    }
+                    break
+            }
+        }
+    }
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+//        sourceCompatibility = 1.8
+//        targetCompatibility = 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
+    implementation "androidx.core:core-ktx:+"
+    implementation 'com.google.android.material:material:1.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(path: ':commutils')
@@ -41,7 +97,6 @@ dependencies {
     implementation files('libs\\XmDownload_2.0.jar')
     implementation files('libs\\XmlyOAuth2SDK_V2.0.jar')
     implementation 'com.github.hackware1993:MagicIndicator:1.5.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'com.squareup.okio:okio:1.15.0'
 
@@ -56,4 +111,10 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
 
     implementation 'com.github.satyan:sugar:1.5'
+
+    if (findProject(":qtsdk")) {
+        api project(":qtsdk")
+    } else {
+        implementation 'fm.qingting.open.android:qtsdk:1.3.0'
+    }
 }

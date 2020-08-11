@@ -2,15 +2,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.along.fragonflyfm">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!--它可以监听用户的连接状态并在用户重新连接到网络时重启之前失败的请求-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
+    <!-- qingting permissions: -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 
     <application
-        android:name=".util.AppUtils"
+        android:name=".base.MyQTApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@drawable/ic_adobe_fm"
@@ -20,16 +30,21 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <meta-data android:name="DATABASE" android:value="sugar_example.db"/>
-        <meta-data android:name="VERSION" android:value="2"/>
-        <meta-data android:name="QUERY_LOG" android:value="true"/>
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="net.along.fragonflyfm.dataBase"/>
-
+        <meta-data
+            android:name="DATABASE"
+            android:value="sugar_example.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="2" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="net.along.fragonflyfm.dataBase" />
 
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.ProgramActivity" />
-        <activity android:name=".activities.PlayerActivity"
-            android:launchMode="singleInstance"/>
         <activity android:name=".activities.AwaitActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,6 +53,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".util.PlayerActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
             android:name=".service.JSONService"
