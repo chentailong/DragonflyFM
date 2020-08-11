@@ -65,9 +65,6 @@
             android:name=".service.FMItemJsonService"
             android:enabled="true" />
 
-        <service
-            android:name=".service.PlayService"
-            android:enabled="true" />
     </application>
 
 </manifest>
