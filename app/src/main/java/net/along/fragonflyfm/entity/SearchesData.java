@@ -7,8 +7,8 @@ import java.util.List;
 public class SearchesData {
     private int content_id;
     private String content_type;
-    private String cover;
-    private String title;
+    private   String cover;
+    private   String title;
     private String description;
     private NowPlaying nowplaying;
 
@@ -44,7 +44,7 @@ public class SearchesData {
         this.cover = cover;
     }
 
-    public String getTitle() {
+    public  String getTitle() {
         return title;
     }
 

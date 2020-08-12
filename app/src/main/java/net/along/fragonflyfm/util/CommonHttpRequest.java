@@ -11,7 +11,7 @@ import okhttp3.Response;
 
 /**
  * 创建者 by:陈泰龙
- * <p> JSON
+ * <p> JSON 数据的下载链接
  * 2020/7/15
  **/
 

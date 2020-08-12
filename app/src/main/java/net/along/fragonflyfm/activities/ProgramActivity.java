@@ -1,7 +1,6 @@
 package net.along.fragonflyfm.activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,8 +48,8 @@ public class ProgramActivity extends AppCompatActivity {
 
     public String cover;
     public String startTime;
-    public String channelName;
-    public int channelId;
+    public static String channelName;
+    public static int channelId;
     public int count;
     public int programId;
 
@@ -84,10 +83,9 @@ public class ProgramActivity extends AppCompatActivity {
         startTime = getIntent().getStringExtra("startTime");
         cover = getIntent().getStringExtra("cover");
         count = getIntent().getIntExtra("audience_count", 0);
-        Log.d(TAG, "inData: " + count);
         programId = getIntent().getIntExtra("programId", 0);
         channelName = getIntent().getStringExtra("channelName");
-        channelId = getIntent().getIntExtra("channel_id", 20697);
+        channelId = getIntent().getIntExtra("channel_id", 1756);
         final int dayOFWeek = GetTime.dayOFWeek();
         final String baseUrl = "https://rapi.qingting.fm/v2/channels/" + channelId + "/playbills?day=" + dayOFWeek;
         final AlertDialog loadingDialog = new AlertDialog.Builder(ProgramActivity.this).create();

@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import net.along.fragonflyfm.R;
+import net.along.fragonflyfm.activities.SearchListActivity;
 import net.along.fragonflyfm.adapter.SearchesAdapter;
 import net.along.fragonflyfm.base.BaseFragment;
 import net.along.fragonflyfm.entity.SearchesData;
@@ -47,7 +47,7 @@ import java.util.TimerTask;
 public class SearchesFragment extends BaseFragment {
     private TextView tv_location;
     private View mRootView;
-    private SearchView sv_location;
+    private TextView mSearchView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private final static String TAG = "SearchesFragment";
     private SearchesAdapter mAdapter;
@@ -75,7 +75,8 @@ public class SearchesFragment extends BaseFragment {
     private void initView() {
         swipeRefreshLayout = mRootView.findViewById(R.id.swipe);
         tv_location = mRootView.findViewById(R.id.fragment_searches_location);
-        sv_location = mRootView.findViewById(R.id.fragment_searches_search);
+        mSearchView = mRootView.findViewById(R.id.fragment_searches_search);
+        mSearchView.setOnClickListener(mOnClickListener);
         fmRecyclerView = mRootView.findViewById(R.id.fm_recycler_view);
         clickChart = mRootView.findViewById(R.id.fragment_searches_mask);
         swipeRefreshLayout.setEnabled(false);
@@ -167,6 +168,10 @@ public class SearchesFragment extends BaseFragment {
                 break;
             case R.id.fragment_searches_mask:
                 shutDialog();
+                break;
+            case R.id.fragment_searches_search:
+                Intent intent = new Intent(getContext(), SearchListActivity.class);
+                startActivity(intent);
                 break;
         }
     };

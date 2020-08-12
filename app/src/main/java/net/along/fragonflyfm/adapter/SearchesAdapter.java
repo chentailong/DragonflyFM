@@ -70,17 +70,16 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
 
             ((CardViewHolder) holder).card_view.setOnClickListener(view -> {
-                Intent toProgramList = new Intent(context, ProgramActivity.class);
-                toProgramList.putExtra("cover", fmCardView.getCover());
-                toProgramList.putExtra("channelName", fmCardView.getTitle());
-                toProgramList.putExtra("previous", fmCardView.getRegion().getTitle());
-                toProgramList.putExtra("channel", fmCardView.getTitle());
-                toProgramList.putExtra("channel_id", fmCardView.getContent_id());
-                toProgramList.putExtra("audience_count",fmCardView.getAudience_count());
-                toProgramList.putExtra("startTime",fmCardView.getNowplaying().getStart_time());
-                toProgramList.putExtra("programId",fmCardView.getNowplaying().getId());
-
-                context.startActivity(toProgramList);
+                Intent intent = new Intent(context, ProgramActivity.class);
+                intent.putExtra("cover", fmCardView.getCover());
+                intent.putExtra("channelName", fmCardView.getTitle());
+                intent.putExtra("previous", fmCardView.getRegion().getTitle());
+                intent.putExtra("channel", fmCardView.getTitle());
+                intent.putExtra("channel_id", fmCardView.getContent_id());
+                intent.putExtra("audience_count",fmCardView.getAudience_count());
+                intent.putExtra("startTime",fmCardView.getNowplaying().getStart_time());
+                intent.putExtra("programId",fmCardView.getNowplaying().getId());
+                context.startActivity(intent);
             });
             ((CardViewHolder) holder).favorImg.setOnClickListener(view -> {
                 switch (flag) {

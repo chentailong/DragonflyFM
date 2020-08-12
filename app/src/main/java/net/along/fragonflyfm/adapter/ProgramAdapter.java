@@ -62,10 +62,9 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
         holder.titleView.setText(entity.getTitle());
         holder.durationView.setText("[" + entity.getStart_time() + "-" + entity.getEnd_time() + "]");
 
-        int temp=((ProgramActivity)context).programId;
-        String startTime=((ProgramActivity)context).startTime;
+        int temp = ((ProgramActivity) context).programId;
+        String startTime = ((ProgramActivity) context).startTime;
         if (entity.getProgram_id() == temp && entity.getStart_time().equals(startTime)) {
-            Log.e("ProgramAdapter","context.programId="+temp+"; entity="+entity.getProgram_id());
             holder.audience_count.setText(((ProgramActivity) context).count + "");
             holder.countImg.setVisibility(View.VISIBLE);
             holder.audience_count.setVisibility(View.VISIBLE);
@@ -80,8 +79,8 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
                 return;
             }
             //点击列表传输数据过去，实现播放功能
-            PlayerActivity.Companion.start(context,((ProgramActivity)context).channelId,null,
-                  ((ProgramActivity)context).channelName,finalHost, finalTitle,((ProgramActivity)context).cover);
+            PlayerActivity.Companion.start(context, ((ProgramActivity) context).channelId, null,
+                    ((ProgramActivity) context).channelName, finalHost, finalTitle, ((ProgramActivity) context).cover);
         });
     }
 
@@ -91,7 +90,7 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
     }
 
     /**
-     *设置组件的名称
+     * 设置组件的名称
      */
     class ProgramItem extends RecyclerView.ViewHolder {
         ImageView stateImg;
@@ -105,6 +104,7 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
 
         /**
          * 初始化
+         *
          * @param itemView
          */
         public ProgramItem(View itemView) {

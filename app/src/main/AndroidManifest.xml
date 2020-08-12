@@ -45,6 +45,7 @@
 
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.ProgramActivity" />
+        <activity android:name=".activities.SearchListActivity"/>
         <activity android:name=".activities.AwaitActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

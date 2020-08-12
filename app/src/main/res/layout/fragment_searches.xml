@@ -12,16 +12,18 @@
         android:layout_marginBottom="15dp"
         android:orientation="horizontal">
 
-        <SearchView
+
+        <TextView
             android:id="@+id/fragment_searches_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/fragment_searches_background"
-            android:focusable="false"
-            android:iconifiedByDefault="false"
-            app:queryHint="请输入关键字" />
+            android:drawableLeft="@drawable/ic_searches"
+            android:gravity="center_vertical"
+            android:hint="搜索电台"
+            android:paddingLeft="10dp" />
 
 
         <TextView
@@ -33,7 +35,6 @@
             android:layout_weight="2"
             android:background="@drawable/fragment_searches_background"
             android:drawableLeft="@drawable/ic_location"
-            android:drawableRight="@drawable/ic_pull"
             android:gravity="center"
             android:text="广西"
             android:textColor="@color/colorBlack" />
@@ -56,7 +57,7 @@
             android:id="@+id/fm_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"/>
+            android:overScrollMode="never" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
