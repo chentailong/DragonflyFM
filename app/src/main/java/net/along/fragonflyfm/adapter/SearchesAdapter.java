@@ -79,6 +79,7 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 intent.putExtra("audience_count",fmCardView.getAudience_count());
                 intent.putExtra("startTime",fmCardView.getNowplaying().getStart_time());
                 intent.putExtra("programId",fmCardView.getNowplaying().getId());
+                intent.putExtra("duration",fmCardView.getNowplaying().getDuration());
                 context.startActivity(intent);
             });
             ((CardViewHolder) holder).favorImg.setOnClickListener(view -> {

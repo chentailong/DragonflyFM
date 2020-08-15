@@ -41,7 +41,7 @@ class PlayerActivity : AppCompatActivity() {
         override fun onPlaybackProgressChanged(currentPositionMS: Long, bufferedPositionMS: Long, durationMS: Long) {
             activity_end_positions.text = parsePlaybackTime(durationMS)   //播放进度
             activity_track_seek_bar.max = durationMS.toInt()              //进度条
-            activity_start_position.text = parsePlaybackTime(currentPositionMS) //播放时长
+            activity_start_position.text = parsePlaybackTime(bufferedPositionMS) //播放时长
             if (!isSeeking) {
                 activity_track_seek_bar.progress = currentPositionMS.toInt()
             }
@@ -54,6 +54,8 @@ class PlayerActivity : AppCompatActivity() {
     private var channelId: Int? = null   //节目id
     private var programIds: ArrayList<Int>? = null  //节目数
     private var curIndex = 0   //节目单号
+
+//    private var duration = 0  //节目长度
 
     private var channelName: String? = null //界面名称
     private var title: String? = null //电台名称
@@ -78,18 +80,21 @@ class PlayerActivity : AppCompatActivity() {
         username = intent.getStringExtra("username")
         title = intent.getStringExtra("title")
         cover = intent.getStringExtra("cover")
+//        duration = (intent.getSerializableExtra("duration") as? Int)!! / 60 / 60
 
-        var myUrl = URL(cover.toString())    // 把传过来的路径转成url
-        var conn = myUrl.openConnection()    // 获取链接
-        conn.connect()                     // 开始连接
-        var imaBit = conn.getInputStream()   // 得到从服务器端发回的数据
-        var bmp = BitmapFactory.decodeStream(imaBit) // 使用工厂把网络的输入流生产Bitmap
-        imaBit.close()               //关闭
-
+        if (cover != null) {
+            var myUrl = URL(cover.toString())    // 把传过来的路径转成url
+            var conn = myUrl.openConnection()    // 获取链接
+            conn.connect()                     // 开始连接
+            var imaBit = conn.getInputStream()   // 得到从服务器端发回的数据
+            var bmp = BitmapFactory.decodeStream(imaBit) // 使用工厂把网络的输入流生产Bitmap
+            imaBit.close()               //关闭
+            activity_player_radio_pictures.setImageBitmap(bmp)  //图片
+        }
         activity_play_title.text = title  //电台名称
         activity_station_name.text = channelName  //地方电台名称
         activity_player_anchor.text = username    //主播
-        activity_player_radio_pictures.setImageBitmap(bmp)  //图片
+//        activity_end_positions.text = duration.toString()
 
         //点击返回上一页
         activity_player_return.setOnClickListener {
@@ -150,8 +155,9 @@ class PlayerActivity : AppCompatActivity() {
         when (v) {
             activity_play_rew -> player?.rewind()              //后退
             activity_play_next -> player?.fastForward()        //快进
-            activity_play_pause -> pause()                     //暂停
             activity_play_play -> play()                       //播放
+            activity_play_pause -> pause()                     //暂停
+
         }
     }
 
@@ -212,7 +218,7 @@ class PlayerActivity : AppCompatActivity() {
         //播放专辑节目需要专辑id跟节目ID，如果播放的是广播，只需要channelId programIs为空就好
         @JvmOverloads
         fun start(context: Context, channelId: Int, programIds: ArrayList<Int>?, currentProgramIdIndex: Int? = 0,
-                  channelName: String, username: String, title: String, cover: String) {
+                  channelName: String, username: String, title: String, cover: String ) {
             val intent = Intent(context, PlayerActivity::class.java)
             intent.putExtra("channelId", channelId)
             if (programIds != null && programIds.size != 0) {

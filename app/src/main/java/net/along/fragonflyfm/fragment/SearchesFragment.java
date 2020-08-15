@@ -1,6 +1,7 @@
 package net.along.fragonflyfm.fragment;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +15,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -24,7 +28,6 @@ import com.google.gson.reflect.TypeToken;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.SearchListActivity;
 import net.along.fragonflyfm.adapter.SearchesAdapter;
-import net.along.fragonflyfm.base.BaseFragment;
 import net.along.fragonflyfm.entity.SearchesData;
 import net.along.fragonflyfm.service.FMItemJsonService;
 import net.along.fragonflyfm.service.JSONService;
@@ -44,7 +47,7 @@ import java.util.TimerTask;
  * 2020/7/1
  **/
 
-public class SearchesFragment extends BaseFragment {
+public class SearchesFragment extends Fragment {
     private TextView tv_location;
     private View mRootView;
     private TextView mSearchView;
@@ -60,7 +63,7 @@ public class SearchesFragment extends BaseFragment {
 
 
     @Override
-    protected View onSubViewLoaded(LayoutInflater inflater, ViewGroup container) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_searches, null);
         initView();
         inDialog();

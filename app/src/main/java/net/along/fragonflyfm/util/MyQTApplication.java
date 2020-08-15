@@ -1,4 +1,4 @@
-package net.along.fragonflyfm.base;
+package net.along.fragonflyfm.util;
 
 import android.app.Application;
 

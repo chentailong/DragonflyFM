@@ -61,7 +61,6 @@ public class SearchListActivity extends AppCompatActivity {
                             intent.putExtra("previous", "搜索");
                             intent.putExtra("channelName", object.getTitle());
                             intent.putExtra("cover", object.getThumb());
-//                            intent.putExtra("programId",data.getNowplaying().getId());
                             intent.putExtra("startTime",object.getUpdateTime());
                             v.getContext().startActivity(intent);
                             break;

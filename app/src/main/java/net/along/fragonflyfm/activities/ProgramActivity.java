@@ -52,6 +52,7 @@ public class ProgramActivity extends AppCompatActivity {
     public static int channelId;
     public int count;
     public int programId;
+    public int duration;
 
 
     @Override
@@ -85,6 +86,7 @@ public class ProgramActivity extends AppCompatActivity {
         count = getIntent().getIntExtra("audience_count", 0);
         programId = getIntent().getIntExtra("programId", 0);
         channelName = getIntent().getStringExtra("channelName");
+        duration = getIntent().getIntExtra("duration",0);
         channelId = getIntent().getIntExtra("channel_id", 1756);
         final int dayOFWeek = GetTime.dayOFWeek();
         final String baseUrl = "https://rapi.qingting.fm/v2/channels/" + channelId + "/playbills?day=" + dayOFWeek;

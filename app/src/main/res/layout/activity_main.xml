@@ -1,51 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
-    <RadioGroup
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/button_rg_tab_bar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:background="#ffffff">
+        app:itemBackground="@color/white"
+        app:itemRippleColor="@color/white"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu_bottom_navigation_view" />
 
-        <RadioButton
-            android:id="@+id/main_radio"
-            style="@style/tab_menu_bottom"
-            android:drawableTop="@drawable/ic_radio"
-            android:text="@string/text_fragment_radio"/>
-
-        <RadioButton
-            android:id="@+id/main_search"
-            style="@style/tab_menu_bottom"
-            android:drawableTop="@drawable/ic_searches"
-            android:text="@string/text_fragment_searches"/>
-
-        <RadioButton
-            android:id="@+id/main_analyze"
-            style="@style/tab_menu_bottom"
-            android:drawableTop="@drawable/ic_analyze"
-            android:text="@string/text_fragment_analyze"/>
-
-    </RadioGroup>
 
     <View
         android:id="@+id/bottom_view_bar"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="@color/colorBai"
-        android:layout_above="@+id/button_rg_tab_bar" />
+        android:layout_above="@+id/button_rg_tab_bar"
+        android:background="@color/colorBai" />
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+    <FrameLayout
+        android:id="@+id/main_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:layout_above="@+id/bottom_view_bar"/>
+        android:layout_above="@id/bottom_view_bar" />
 
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/to_playing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_view_bar"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_music"
+        app:rippleColor="@color/text1" />
 </RelativeLayout>

@@ -20,7 +20,7 @@
 
 
     <application
-        android:name=".base.MyQTApplication"
+        android:name=".util.MyQTApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@drawable/ic_adobe_fm"

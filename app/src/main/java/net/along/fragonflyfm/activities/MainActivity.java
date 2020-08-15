@@ -2,26 +2,26 @@ package net.along.fragonflyfm.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
 
-import net.along.fragonflyfm.Constants.Constants;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import net.along.fragonflyfm.R;
-import net.along.fragonflyfm.adapter.IndicatorAdapter;
+import net.along.fragonflyfm.fragment.AnalyzeFragment;
+import net.along.fragonflyfm.fragment.RadioFragment;
+import net.along.fragonflyfm.fragment.SearchesFragment;
+import net.along.fragonflyfm.util.PlayerActivity;
 
 
-public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
-    private IndicatorAdapter mAdapter;
-    private ViewPager mViewPager;
-    private RadioGroup mGroup;
-    private RadioButton mRadio;
-    private RadioButton mSearch;
-    private RadioButton mAnalyze;
+public class MainActivity extends AppCompatActivity {
     private final static String TAG = "MainActivity";
-
+    private FloatingActionButton mActionButton;
+    private AnalyzeFragment mAnalyzeFragment;
+    private RadioFragment mRadioFragment;
+    private SearchesFragment mSearchesFragment;
+    private BottomNavigationView button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,82 +32,36 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
 
     private void initView() {
-        mAdapter = new IndicatorAdapter(getSupportFragmentManager()); //将适配器绑定于FragmentAdapter，用于数据的更新
-        mGroup = findViewById(R.id.button_rg_tab_bar);
-        mRadio = findViewById(R.id.main_radio);                     //电台
-        mSearch = findViewById(R.id.main_search);                   //搜索
-        mAnalyze = findViewById(R.id.main_analyze);                 //分析
-        mGroup.setOnCheckedChangeListener(this);                    //滑动设置监听器
-        mViewPager = findViewById(R.id.view_pager);                 //内容存储器，存放Fragment中的数据显示
-        mViewPager.setAdapter(mAdapter);                            //为内容添加适配器
-        mViewPager.addOnPageChangeListener(this);                   //设置监听
-        mViewPager.setCurrentItem(Constants.INDEX_SUBSCRIPTION);    //默认跳转界面为ViewPager的第二页
-        mSearch.setChecked(true);                                   //设置底部导航栏默认为第二页，颜色也跟随变化
+        mAnalyzeFragment = new AnalyzeFragment();
+        mRadioFragment = new RadioFragment();
+        mSearchesFragment = new SearchesFragment();
+        button = findViewById(R.id.button_rg_tab_bar);
+        button.setOnNavigationItemSelectedListener(navListener);
+        button.getMenu().getItem(1).setChecked(true);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame,mSearchesFragment).commit();
+        mActionButton = findViewById(R.id.to_playing);
+        mActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
+            startActivity(intent);
+        });
     }
 
-    /**
-     * 点击图标实现跳转
-     */
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.main_radio:
-                mViewPager.setCurrentItem(Constants.INDEX_RECOMMEND);
+
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener= menuItem -> {
+        switch (menuItem.getItemId()){
+            case R.id.nav_menu_find:
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_frame,mSearchesFragment).commit();
                 break;
-            case R.id.main_search:
-                mViewPager.setCurrentItem(Constants.INDEX_SUBSCRIPTION);
+            case R.id.nav_menu_album:
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_frame,mRadioFragment).commit();
                 break;
-            case R.id.main_analyze:
-                mViewPager.setCurrentItem(Constants.INDEX_HISTORY);
-                break;
-            default:
+            case R.id.nav_menu_analyse:
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_frame,mAnalyzeFragment).commit();
                 break;
         }
-    }
-
-
-    /**
-     * 重写VIew Page的页面切换方法
-     *
-     * @param position
-     * @param positionOffset
-     * @param positionOffsetPixels
-     */
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    /**
-     * 滑动底部导航栏同步更新
-     *
-     * @param state
-     */
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        //state等于2时滑动结束 1正在滑动 0未滑动
-        if (state == 2) {
-            switch (mViewPager.getCurrentItem()) {
-                case Constants.WHAT_COUNT_DOWN:
-                    mRadio.setChecked(true);
-                    break;
-                case Constants.INDEX_SUBSCRIPTION:
-                    mSearch.setChecked(true);
-                    break;
-                case Constants.INDEX_HISTORY:
-                    mAnalyze.setChecked(true);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
+        return true;
+    };
 
     @Override
     public void onBackPressed() {

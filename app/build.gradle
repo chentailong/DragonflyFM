@@ -117,4 +117,6 @@ dependencies {
     } else {
         implementation 'fm.qingting.open.android:qtsdk:1.3.0'
     }
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

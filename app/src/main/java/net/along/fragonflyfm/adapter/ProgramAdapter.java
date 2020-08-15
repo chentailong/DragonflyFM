@@ -1,7 +1,6 @@
 package net.along.fragonflyfm.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +79,8 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
             }
             //点击列表传输数据过去，实现播放功能
             PlayerActivity.Companion.start(context, ((ProgramActivity) context).channelId, null,
-                    ((ProgramActivity) context).channelName, finalHost, finalTitle, ((ProgramActivity) context).cover);
+                    ((ProgramActivity) context).channelName, finalHost, finalTitle,
+                    ((ProgramActivity) context).cover);
         });
     }
 

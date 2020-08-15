@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import net.along.fragonflyfm.Constants.Constants;
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.fragment.AwaitFragment;
 import net.along.fragonflyfm.service.FMItemJsonService;
@@ -31,6 +30,8 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
     private Handler mHandler;
     private Runnable mRunnable;
     Timer mTimer = new Timer();
+    public static int recLen = 5;//跳过倒计时提示5秒
+    public static int seconds = 5;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,16 +71,13 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
     TimerTask task = new TimerTask() {
         @Override
         public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String display = Constants.recLen + "秒";
-                    mTextView.setText(display);
-                    Constants.recLen--;   //时间减一
-                    if (Constants.recLen < 0) {
-                        mTimer.cancel();
-                        mTextView.setVisibility(View.VISIBLE);  //倒计时到0时隐藏字体
-                    }
+            runOnUiThread(() -> {
+                String display = recLen + "秒";
+                mTextView.setText(display);
+                recLen--;   //时间减一
+                if (recLen < 0) {
+                    mTimer.cancel();
+                    mTextView.setVisibility(View.VISIBLE);  //倒计时到0时隐藏字体
                 }
             });
         }
@@ -111,7 +109,7 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
      */
     @Override
     public void cancelCountDown() {
-        Constants.seconds = 0;
+        seconds = 0;
     }
 
     @Override
