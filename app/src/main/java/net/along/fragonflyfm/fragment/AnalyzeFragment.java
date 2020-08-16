@@ -45,9 +45,9 @@ public class AnalyzeFragment extends Fragment {
         mBarChart = mRootView.findViewById(R.id.fragment_chart_b);
 
         mPieChart.setExtraOffsets(20f,20f,20f,20f);
-        List<String> xvals=new ArrayList<>();//每个扇形的描述
-        xvals.add("美国");
-        xvals.add("中国");
+        List<String> xxx=new ArrayList<>();//每个扇形的描述
+        xxx.add("美国");
+        xxx.add("中国");
         List<Integer> colors=new ArrayList<>();//每个扇形的颜色
         colors.add(Color.parseColor("#FF6633"));
         colors.add(Color.parseColor("#66CC99"));

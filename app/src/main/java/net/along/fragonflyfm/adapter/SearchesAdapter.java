@@ -3,6 +3,7 @@ package net.along.fragonflyfm.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +20,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.orm.SugarRecord;
 
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.ProgramActivity;
+import net.along.fragonflyfm.entity.Categories;
 import net.along.fragonflyfm.entity.SearchesData;
+import net.along.fragonflyfm.record.LikeRadio;
+import net.along.fragonflyfm.record.RadioTendency;
 import net.along.fragonflyfm.service.FMItemJsonService;
+import net.along.fragonflyfm.util.DataBaseUtil;
 
 import org.json.JSONArray;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -59,6 +68,7 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return holder;
         }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
@@ -70,44 +80,141 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
 
             ((CardViewHolder) holder).card_view.setOnClickListener(view -> {
+                updateChannelRecord(fmCardView.getTitle(), fmCardView.getContent_id());
+                handleCategories(fmCardView.getCategories());
+
                 Intent intent = new Intent(context, ProgramActivity.class);
                 intent.putExtra("cover", fmCardView.getCover());
                 intent.putExtra("channelName", fmCardView.getTitle());
                 intent.putExtra("previous", fmCardView.getRegion().getTitle());
                 intent.putExtra("channel", fmCardView.getTitle());
                 intent.putExtra("channel_id", fmCardView.getContent_id());
-                intent.putExtra("audience_count",fmCardView.getAudience_count());
-                intent.putExtra("startTime",fmCardView.getNowplaying().getStart_time());
-                intent.putExtra("programId",fmCardView.getNowplaying().getId());
-                intent.putExtra("duration",fmCardView.getNowplaying().getDuration());
+                intent.putExtra("audience_count", fmCardView.getAudience_count());
+                if (fmCardView.getNowplaying()!=null) {
+                    intent.putExtra("startTime", fmCardView.getNowplaying().getStart_time());
+                    intent.putExtra("programId", fmCardView.getNowplaying().getId());
+                    intent.putExtra("duration", fmCardView.getNowplaying().getDuration());
+                }else{
+                    Toast.makeText(context, "暂无节目播放，请选择其他电台节目", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 context.startActivity(intent);
             });
             ((CardViewHolder) holder).favorImg.setOnClickListener(view -> {
                 switch (flag) {
-                    case  0:
+                    case 0:
                         Toast.makeText(context, "你收藏了这个电台", Toast.LENGTH_SHORT).show();
                         ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_collect);
-                        flag=1;
+                        flag = 1;
                         break;
                     case 1:
                         Toast.makeText(context, "你取消收藏了这个电台", Toast.LENGTH_SHORT).show();
                         ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
-                        flag=0;
+                        flag = 0;
                         break;
                 }
             });
         }
     }
 
+    /**
+     * 遍历Categories
+     *
+     * @param categories
+     */
+    private void handleCategories(List<Categories> categories) {
+        for (Categories category : categories) {
+            RadioTendencyRecord(category.getId(), category.getTitle());
+        }
+    }
 
-    public void upData(){
-        JSONArray array= FMItemJsonService.getLastGetJson();
-        Gson gson=new Gson();
-        List<SearchesData> list=
-                gson.fromJson(array.toString(), new TypeToken<List<SearchesData>>(){}.getType());
-        this.data= list;
+    /**
+     * 更新电台类型倾向数据
+     */
+    private void RadioTendencyRecord(int categoryId, String categoryTitle) {
+        Iterator tables = RadioTendency.findAll(RadioTendency.class);
+        long nowTimeStamp = System.currentTimeMillis();//获取当前的时间戳
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(nowTimeStamp));
+        while (tables.hasNext()) {
+            RadioTendency tableObj = (RadioTendency) tables.next();
+            long thisTimeStamp = tableObj.getTimeStamp();//获取数据库的时间戳
+            Calendar thisCalendar = Calendar.getInstance();
+            thisCalendar.setTime(new Date(thisTimeStamp));
+            if (DataBaseUtil.isToday(calendar, thisCalendar)) {//如果是同一天
+                if (categoryId == tableObj.getCategoryId() && categoryTitle.equals(tableObj.getCategoryTitle())) {
+                    int count = tableObj.getCount() + 1;
+                    long id = tableObj.getId();
+                    SugarRecord.executeQuery("update RADIO_TENDENCY set count=? where id=?",
+                            count + "", id + "");
+                    Log.e(TAG, "更新今天访问" + categoryTitle + "次数   " + "   新增了一条电台类型倾向记录");
+                    Log.e(TAG, "访问次数为: " + count);
+                    return;
+                }
+            }
+        }
+
+        RadioTendency table = new RadioTendency();
+        table.setCategoryId(categoryId);
+        table.setCategoryTitle(categoryTitle);
+        table.setCount(1);
+        table.setTimeStamp(nowTimeStamp);
+        table.save();
+        Log.e(TAG, "新增了一条电台类型倾向记录" + table.toString());
+    }
+
+
+    /**
+     * 更新最受欢迎的电台数据
+     *
+     * @param channelTitle
+     * @param channelId
+     */
+    private void updateChannelRecord(String channelTitle, int channelId) {
+        Iterator tables = LikeRadio.findAll(LikeRadio.class);
+        long nowTimeStamp = System.currentTimeMillis();//获取当前的时间戳
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(nowTimeStamp));
+
+        while (tables.hasNext()) {
+            LikeRadio tableObj = (LikeRadio) tables.next();
+            long thisTimeStamp = tableObj.getTimeStamp();//获取数据库的时间戳
+            Calendar thisCalendar = Calendar.getInstance();
+            thisCalendar.setTime(new Date(thisTimeStamp));
+            if (DataBaseUtil.isToday(calendar, thisCalendar)) {//如果是同一天
+                if (channelId == tableObj.getChannelId() && channelTitle.equals(tableObj.getChannel())) {//判断是否是同一个电台
+                    int count = tableObj.getCount() + 1;
+                    long id = tableObj.getId();
+                    SugarRecord.executeQuery("update LIKE_RADIO set count=? where id=?", count + "", id + "");
+                    return;
+                }
+            }
+        }
+
+        //如果没有找到想要的数据，那就增加一条
+        LikeRadio table = new LikeRadio();
+        table.setChannel(channelTitle);
+        table.setCount(1);
+        table.setChannelId(channelId);
+        table.setTimeStamp(nowTimeStamp);
+        table.save();
+        Log.e(TAG, "新增了一条最受欢迎电台记录   " + channelTitle);
+    }
+
+
+    /**
+     * 更新适配器中的数据
+     */
+    public void upData() {
+        JSONArray array = FMItemJsonService.getLastGetJson();
+        Gson gson = new Gson();
+        List<SearchesData> list =
+                gson.fromJson(array.toString(), new TypeToken<List<SearchesData>>() {
+                }.getType());
+        this.data = list;
         notifyDataSetChanged();
     }
+
     @Override
     public int getItemViewType(int position) {
         if (position == data.size()) {
@@ -141,6 +248,9 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    /**
+     * 加载中的id绑定
+     */
     public class FooterHolder extends RecyclerView.ViewHolder {
 
         ProgressBar progressBar;

@@ -3,6 +3,7 @@ package net.along.fragonflyfm.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -10,12 +11,20 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.orm.SugarContext;
+import com.orm.SugarRecord;
+
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.fragment.AwaitFragment;
+import net.along.fragonflyfm.record.AppVisitCount;
 import net.along.fragonflyfm.service.FMItemJsonService;
 import net.along.fragonflyfm.service.JSONService;
+import net.along.fragonflyfm.util.DataBaseUtil;
 import net.lzzy.commutils.BaseActivity;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,6 +35,7 @@ import java.util.TimerTask;
  **/
 
 public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCancelSplashListener, View.OnClickListener {
+    private static final String TAG = "AwaitActivity";
     private TextView mTextView;
     private Handler mHandler;
     private Runnable mRunnable;
@@ -38,7 +48,9 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
         super.onCreate(savedInstanceState);
         int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
         getWindow().setFlags(flag, flag);
+        SugarContext.init(this);
         setContentView(R.layout.activity_await);
+        record();   //记录访问次数
         startService();
         initVIew();
         startService(new Intent(this, JSONService.class));
@@ -53,6 +65,35 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
                 finish();
             }
         }, 5000);  //延迟5秒后发送handler信息
+    }
+
+    private void record() {
+        Iterator visit = AppVisitCount.findAll(AppVisitCount.class);
+        long timeStamp = System.currentTimeMillis();   //获取时间戳
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(timeStamp));
+
+        while (visit.hasNext()) {
+            AppVisitCount tableObj = (AppVisitCount) visit.next();
+            long DataTimeStamp = tableObj.getTimeStamp();  //获取数据库中的时间戳
+            Calendar DataCalendar = Calendar.getInstance();
+            DataCalendar.setTime(new Date(DataTimeStamp));
+            if (DataBaseUtil.isToday(calendar, DataCalendar)) {  //判断是否是同一天、
+                int count = tableObj.getCount() + 1;
+                SugarRecord sugarRecord = tableObj;
+                long id = sugarRecord.getId();
+                SugarRecord.executeQuery("update APP_VISIT_COUNT set count=? where id=?", count + "", id + "");
+                Log.e(TAG, "record: 更新今天的访问次数");
+                Log.e(TAG, "record: 新增一次访问APP次数" + count);
+                return;
+            }
+        }
+        //不是同一天的情况
+        AppVisitCount newData = new AppVisitCount();
+        newData.setCount(1);
+        newData.setTimeStamp(timeStamp);
+        newData.save();
+        Log.e(TAG, "新增一次访问APP次数:" + newData.toString());
     }
 
     private void initVIew() {

@@ -24,19 +24,25 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.orm.SugarRecord;
 
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.SearchListActivity;
 import net.along.fragonflyfm.adapter.SearchesAdapter;
 import net.along.fragonflyfm.entity.SearchesData;
+import net.along.fragonflyfm.record.RegionTable;
 import net.along.fragonflyfm.service.FMItemJsonService;
 import net.along.fragonflyfm.service.JSONService;
+import net.along.fragonflyfm.util.DataBaseUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -120,6 +126,7 @@ public class SearchesFragment extends Fragment {
             try {
                 JSONObject district = jsonData.getJSONObject(i);
                 intent.putExtra("provinceId", district.getInt("id"));
+                updateRecord(district.getString("title"));
                 getActivity().startService(intent);
                 updateFM();
             } catch (JSONException e) {
@@ -127,6 +134,41 @@ public class SearchesFragment extends Fragment {
             }
             shutDialog();
         });
+    }
+
+    private void updateRecord(String provinceName) {
+        Iterator tables = RegionTable.findAll(RegionTable.class);
+        long nowTimeStamp = System.currentTimeMillis();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(nowTimeStamp));
+
+        while (tables.hasNext()) {
+            RegionTable tableObj = (RegionTable) tables.next();
+            long thisTimeStamp = tableObj.getStamp();//获取数据库的时间戳
+            Calendar thisCalendar = Calendar.getInstance();
+            thisCalendar.setTime(new Date(thisTimeStamp));
+            if (DataBaseUtil.isToday(calendar, thisCalendar)) {//如果是同一天
+                if (tableObj.getProvince().equals(provinceName)) {
+                    int count = tableObj.getCount() + 1;
+                    SugarRecord sugarRecord = tableObj;
+                    long id = sugarRecord.getId();
+                    SugarRecord.executeQuery("update REGION_TABLE set count=? where id=?", count + "", id + "");
+                    Log.e(TAG, "更新今天访问 " + provinceName + " 的次数");
+                    Log.e(TAG, "地区访问次数：" + count);
+                    return;
+                }
+
+            } else {
+                continue;
+            }
+        }
+        RegionTable table = new RegionTable();
+        table.setCount(1);
+        table.setProvince(provinceName);
+        table.setStamp(nowTimeStamp);
+        table.save();
+        Log.e(TAG, "增加一条访问地区记录 " + provinceName);
+
     }
 
     /**

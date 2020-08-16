@@ -41,7 +41,7 @@ class PlayerActivity : AppCompatActivity() {
         override fun onPlaybackProgressChanged(currentPositionMS: Long, bufferedPositionMS: Long, durationMS: Long) {
             activity_end_positions.text = parsePlaybackTime(durationMS)   //播放进度
             activity_track_seek_bar.max = durationMS.toInt()              //进度条
-            activity_start_position.text = parsePlaybackTime(bufferedPositionMS) //播放时长
+            activity_start_position.text = parsePlaybackTime(currentPositionMS) //播放时长
             if (!isSeeking) {
                 activity_track_seek_bar.progress = currentPositionMS.toInt()
             }

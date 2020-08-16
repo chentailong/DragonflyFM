@@ -1,6 +1,7 @@
 package net.along.fragonflyfm.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,13 @@ import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.ProgramActivity;
 import net.along.fragonflyfm.entity.Broadcasters;
 import net.along.fragonflyfm.entity.Program;
+import net.along.fragonflyfm.record.ProgramGreet;
+import net.along.fragonflyfm.util.DataBaseUtil;
 import net.along.fragonflyfm.util.PlayerActivity;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -81,8 +87,50 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
             PlayerActivity.Companion.start(context, ((ProgramActivity) context).channelId, null,
                     ((ProgramActivity) context).channelName, finalHost, finalTitle,
                     ((ProgramActivity) context).cover);
+            updateProgramTable(entity.getProgram_id(), entity.getTitle());
         });
     }
+
+    /**
+     * 最受欢迎的节目
+     * @param programId
+     * @param programName
+     */
+    private void updateProgramTable(int programId, String programName) {
+        long nowTimeStamp = System.currentTimeMillis();   //获取时间戳
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(nowTimeStamp));
+        Iterator iterator = ProgramGreet.findAll(ProgramGreet.class);
+        while (iterator.hasNext()) {
+            ProgramGreet programIterator = (ProgramGreet) iterator.next();
+            long DataTimeStamp = programIterator.getTimeStamp();  //数据库时间戳
+            Calendar DataCalendar = Calendar.getInstance();
+            DataCalendar.setTime(new Date(DataTimeStamp));
+            if (DataBaseUtil.isToday(calendar, DataCalendar)) {  //判断这一记录是否是今天产生的
+                int thisProgramId = programIterator.getProgramId();
+                String thisProgramName = programIterator.getProgramName();
+                if (programId == thisProgramId && programName == thisProgramName) { //判断这个节目的id和节目名是否和点击的节目一致
+                    long thisId = programIterator.getId();
+                    int updateCount = programIterator.getCount();
+                    ProgramGreet.executeQuery("update PROGRAM_GREET set count=? where id=?",
+                            updateCount + 1 + "", thisId + "");
+                    Log.e(TAG, "u新增一条最受欢迎节目数据 "+ updateCount);
+
+                    return;
+                }
+            }
+        }
+        //如果当天没有记录，就新增一条
+        ProgramGreet newVisit = new ProgramGreet();
+        newVisit.setProgramId(programId);
+        newVisit.setProgramName(programName);
+        newVisit.setCount(1);
+        newVisit.setTimeStamp(nowTimeStamp);
+        newVisit.save();
+        Log.e(TAG, ": 新增一条最受欢迎节目数据  " + programName);
+        Log.e(TAG, "访问次数： " + 1 );
+    }
+
 
     @Override
     public int getItemCount() {

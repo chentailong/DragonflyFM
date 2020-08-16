@@ -30,18 +30,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <meta-data
-            android:name="DATABASE"
-            android:value="sugar_example.db" />
-        <meta-data
-            android:name="VERSION"
-            android:value="2" />
-        <meta-data
-            android:name="QUERY_LOG"
-            android:value="true" />
-        <meta-data
-            android:name="DOMAIN_PACKAGE_NAME"
-            android:value="net.along.fragonflyfm.dataBase" />
+        <meta-data android:name="DATABASE" android:value="qingting_record.db"/>
+        <meta-data android:name="VERSION" android:value="6"/>
+        <meta-data android:name="QUERY_LOG" android:value="true"/>
+        <meta-data android:name="DOMAIN_PACKAGE_NAME"  android:value="net.along.fragonflyfm.record"/>
 
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.ProgramActivity" />
