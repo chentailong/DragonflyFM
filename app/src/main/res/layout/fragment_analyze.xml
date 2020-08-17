@@ -14,7 +14,7 @@
             android:id="@+id/analyze_titles"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20sp"
+            android:layout_marginLeft="5dp"
             android:text="app访问次数"
             android:textColor="#fff"
             android:textSize="16sp" />
@@ -22,7 +22,7 @@
         <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="15dp"
             android:orientation="horizontal">
 
             <RadioButton
@@ -51,13 +51,13 @@
 
     </LinearLayout>
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/fragment_chart_p"
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/fragment_chart_l1"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/fragment_chart_l1"
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/fragment_chart_p"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -69,12 +69,12 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/fragment_chart_l2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <com.github.mikephil.charting.charts.RadarChart
         android:id="@+id/fragment_chart_r"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,12 +104,14 @@
             android:layout_height="10dp"
             android:layout_margin="5dp"
             android:background="@drawable/btn_flat_style" />
+
         <TextView
             android:id="@+id/fragment_chart_dot4"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_margin="5dp"
             android:background="@drawable/btn_flat_style" />
+
         <TextView
             android:id="@+id/fragment_chart_dot5"
             android:layout_width="10dp"

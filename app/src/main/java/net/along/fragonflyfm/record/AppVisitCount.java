@@ -9,8 +9,8 @@ import com.orm.SugarRecord;
  **/
 
 public class AppVisitCount extends SugarRecord {
-    private long timeStamp;
-    private int count;
+    public  long timeStamp;
+    public  int count;
 
     public long getTimeStamp() {
         return timeStamp;

@@ -41,5 +41,6 @@
         android:layout_margin="20dp"
         android:backgroundTint="@color/white"
         android:src="@drawable/ic_music"
+        app:fabSize="mini"
         app:rippleColor="@color/text1" />
 </RelativeLayout>

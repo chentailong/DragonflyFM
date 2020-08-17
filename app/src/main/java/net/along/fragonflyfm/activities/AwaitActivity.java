@@ -53,17 +53,14 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
         record();   //记录访问次数
         startService();
         initVIew();
-        startService(new Intent(this, JSONService.class));
+        startService(new Intent(this, JSONService.class));  //启动服务
         mTimer.schedule(task, 1000, 1000);//等待时间一秒，停顿时间一秒
         mHandler = new Handler();
-        mHandler.postDelayed(mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                //从闪屏界面跳转到首界面
-                Intent intent = new Intent(AwaitActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        mHandler.postDelayed(mRunnable = () -> {
+            //从闪屏界面跳转到首界面
+            Intent intent = new Intent(AwaitActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }, 5000);  //延迟5秒后发送handler信息
     }
 

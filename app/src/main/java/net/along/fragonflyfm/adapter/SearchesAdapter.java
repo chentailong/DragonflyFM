@@ -160,7 +160,7 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         table.setCount(1);
         table.setTimeStamp(nowTimeStamp);
         table.save();
-        Log.e(TAG, "新增了一条电台类型倾向记录" + table.toString());
+        Log.e(TAG, "新增了一条电台类型倾向记录" + categoryTitle);
     }
 
 
