@@ -90,7 +90,7 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
         newData.setCount(1);
         newData.setTimeStamp(timeStamp);
         newData.save();
-        Log.e(TAG, "新增一次访问APP次数:" + newData.toString());
+        Log.e(TAG, "新增一次访问APP次数:" + 1);
     }
 
     private void initVIew() {

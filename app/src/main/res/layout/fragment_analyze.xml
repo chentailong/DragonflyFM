@@ -20,12 +20,13 @@
             android:textSize="16sp" />
 
         <RadioGroup
+            android:id="@+id/radioGroup_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
             android:orientation="horizontal">
 
             <RadioButton
+                android:id="@+id/button_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/liji_material_red_500"
@@ -33,6 +34,7 @@
                 android:textColor="#fff" />
 
             <RadioButton
+                android:id="@+id/button_week"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/liji_material_red_500"
@@ -40,6 +42,7 @@
                 android:textColor="#fff" />
 
             <RadioButton
+                android:id="@+id/button_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/liji_material_red_500"

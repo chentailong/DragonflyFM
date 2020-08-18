@@ -3,10 +3,12 @@ package net.along.fragonflyfm.fragment;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,11 +27,18 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import net.along.fragonflyfm.R;
+import net.along.fragonflyfm.record.AppVisitCount;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 创建者 by:陈泰龙
@@ -42,9 +51,10 @@ public class AnalyzeFragment extends Fragment {
     private static final String TAG = "AnalyzeFragment";
     private static final float MIN_TOUCH_DISTANCE = 10f;
     private TextView title_message;
+    private List<AppVisitCount> count = new ArrayList<>();
+    private int chartIndex = 0;
     private View mRootView;
     private float touchX1;
-    private int chartIndex = 0;
     private View[] dots;
     private Chart[] mChart;
     private PieChart mPieChart;
@@ -52,20 +62,24 @@ public class AnalyzeFragment extends Fragment {
     private LineChart mLineChart2;
     private BarChart mBarChart;
     private RadarChart mRadarChart;
+    private RadioGroup mRadioGroup;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_analyze, container, false);
-        init();
+        initView();
+        LineChart();  //线型图表
+        PieChart();   //饼图
         return mRootView;
     }
 
-
     /**
-     * 初始化
+     * 初始化视图数据，实现滑动变化 MPAndroid布局
      */
     @SuppressLint("ClickableViewAccessibility")
-    private void init() {
+    private void initView() {
+        mRadioGroup = mRootView.findViewById(R.id.radioGroup_time);
+        mRadioGroup.setOnCheckedChangeListener(RadioGroup);
         title_message = mRootView.findViewById(R.id.analyze_titles);
         View dot1 = mRootView.findViewById(R.id.fragment_chart_dot1);
         View dot2 = mRootView.findViewById(R.id.fragment_chart_dot2);
@@ -79,10 +93,9 @@ public class AnalyzeFragment extends Fragment {
         mBarChart = mRootView.findViewById(R.id.fragment_chart_b);
         mRadarChart = mRootView.findViewById(R.id.fragment_chart_r);
         mChart = new Chart[]{mLineChart1, mPieChart, mBarChart, mLineChart2, mRadarChart};
-        LineChart();  //线型图表
         for (Chart chart : mChart) {
-            chart.setTouchEnabled(false);
-            chart.setVisibility(View.VISIBLE);
+            chart.setTouchEnabled(false);     //可滑动
+            chart.setVisibility(View.GONE);  //隐藏其他视图
             chart.setNoDataText("数据获取中......");
             chart.setExtraOffsets(5, 10, 5, 25);
         }
@@ -110,14 +123,12 @@ public class AnalyzeFragment extends Fragment {
                 }
             }
             return true;
-        });
-        configPieChart();
-        mPieChart.setVisibility(View.VISIBLE);
+        }); //滑动界面的变化
+        mLineChart1.setVisibility(View.VISIBLE);
     }
 
-
     /**
-     * 线性图标
+     * App点击次数的线性图表测试，暂无真实数据
      */
     private void LineChart() {
         ArrayList<Entry> entry = new ArrayList<>();
@@ -145,26 +156,86 @@ public class AnalyzeFragment extends Fragment {
             set1.setValueTextSize(9f);//设置显示值的文字大小
             set1.setDrawFilled(false);//设置禁用范围背景填充
 
+            XAxis xAxis = mLineChart1.getXAxis(); //X轴
+            xAxis.setEnabled(true);//设置轴启用或禁用 如果禁用以下的设置全部不生效
+            xAxis.setDrawGridLines(false);//设置x轴上每个点对应的线
+            xAxis.setDrawLabels(true);//绘制标签  指x轴上的对应数值
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//设置x轴的显示位置
+            xAxis.setAvoidFirstLastClipping(true);//图表将避免第一个和最后一个标签条目被减掉在图表或屏幕的边缘
+            xAxis.setLabelRotationAngle(10f);//设置x轴标签的旋转角
+            YAxis rightAxis = mLineChart1.getAxisRight();  //获取右边的轴线
+            rightAxis.setEnabled(false);//设置图表右边的y轴禁用
+            YAxis leftAxis = mLineChart1.getAxisLeft();//获取左边的轴线
+            leftAxis.setDrawZeroLine(true);//是否绘制0所在的网格线
+            Legend l = mLineChart1.getLegend();// 设置图例
+            l.setTextSize(10f);//设置文字大小
+            l.setForm(Legend.LegendForm.CIRCLE);//正方形，圆形或线
+            l.setFormSize(10f); // 设置Form的大小
+            l.setWordWrapEnabled(true);//是否支持自动换行
+            l.setFormLineWidth(10f);//设置Form的宽度
+
             ArrayList<ILineDataSet> dataSets = new ArrayList<>(); //保存LineDataSet集合
             dataSets.add(set1);  //保存数据设置
             LineData data = new LineData(dataSets); //创建LineData对象 属于LineChart折线图的数据集合
             mLineChart1.setData(data);  // 添加到图表中
             mLineChart1.invalidate(); //绘制图表
         }
-        BaseResult();
     }
 
     /**
-     * <p>
+     * 各地区访问次数的饼图测试，暂无真实数据
      */
-    private void configPieChart() {
-        mPieChart.setUsePercentValues(true);
-        mPieChart.setDrawHoleEnabled(false);
+    private void PieChart() {
+        ArrayList<PieEntry> entry = new ArrayList<>();
+        entry.clear();
+        entry.add(new PieEntry(10f, "广西"));
+        entry.add(new PieEntry(30f, "广东"));
+        entry.add(new PieEntry(20f, "北京"));
+        entry.add(new PieEntry(20f, "上海"));
+        entry.add(new PieEntry(10f, "天津"));
+        entry.add(new PieEntry(10f, "海南"));
+        mPieChart.setUsePercentValues(true); //设置是否显示百分比
+        mPieChart.getDescription().setEnabled(false);  //取消Description字体的显示
+        mPieChart.setExtraOffsets(5, 5, 5, 5);
+        mPieChart.setEntryLabelColor(Color.BLACK);//设置pieChart图表文本字体颜色
+        mPieChart.setEntryLabelTextSize(15f);//设置pieChart图表文本字体大小
+        mPieChart.setDrawHoleEnabled(false);  //取消中心圆
         mPieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        Legend legend = mPieChart.getLegend(); //获取图例
+        legend.setXEntrySpace(7f); //设置图例实体之间延X轴的间距（setOrientation = HORIZONTAL有效）
+        legend.setYEntrySpace(0f); //设置图例实体之间延Y轴的间距（setOrientation = VERTICAL 有效）
+        legend.setYOffset(25f);  //图例的y偏移量
+        legend.setXOffset(10f);  //图例x的偏移量
+        legend.setTextSize(13);  //图例文字的大小
+        legend.setOrientation(Legend.LegendOrientation.VERTICAL);  //设置图例水平显示
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM); //顶部
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT); //右对其
+
+        PieDataSet dataSet = new PieDataSet(entry, "各地区访问比例%");
+        ArrayList<Integer> integer = new ArrayList<>();
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            integer.add(c);
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            integer.add(c);
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            integer.add(c);
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            integer.add(c);
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            integer.add(c);
+        integer.add(ColorTemplate.getHoloBlue());
+        dataSet.setColors(integer);  //设置颜色
+
+        PieData data = new PieData(dataSet);
+        data.setValueTextColor(Color.BLACK);
+        data.setValueTextSize(15f);
+        data.setValueFormatter(new PercentFormatter());
+        mPieChart.setData(data);
+        mPieChart.invalidate();
     }
 
     /**
-     * 切换时颜色变化 And 标题变化
+     * 切换时底部圆圈颜色变化 And 标题变化
      */
     private void switchChart() {
         for (int i = 0; i < mChart.length; i++) {
@@ -180,25 +251,21 @@ public class AnalyzeFragment extends Fragment {
     }
 
     /**
-     * 线型图表的显示效果
+     * 点击选择时间，查询活动轨迹
      */
-    private void BaseResult() {
-        XAxis xAxis = mLineChart1.getXAxis(); //X轴
-        xAxis.setEnabled(true);//设置轴启用或禁用 如果禁用以下的设置全部不生效
-        xAxis.setDrawGridLines(false);//设置x轴上每个点对应的线
-        xAxis.setDrawLabels(true);//绘制标签  指x轴上的对应数值
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//设置x轴的显示位置
-        xAxis.setAvoidFirstLastClipping(true);//图表将避免第一个和最后一个标签条目被减掉在图表或屏幕的边缘
-        xAxis.setLabelRotationAngle(10f);//设置x轴标签的旋转角
-        YAxis rightAxis = mLineChart1.getAxisRight();  //获取右边的轴线
-        rightAxis.setEnabled(false);//设置图表右边的y轴禁用
-        YAxis leftAxis = mLineChart1.getAxisLeft();//获取左边的轴线
-        leftAxis.setDrawZeroLine(true);//是否绘制0所在的网格线
-        Legend l = mLineChart1.getLegend();// 设置图例
-        l.setTextSize(10f);//设置文字大小
-        l.setForm(Legend.LegendForm.CIRCLE);//正方形，圆形或线
-        l.setFormSize(10f); // 设置Form的大小
-        l.setWordWrapEnabled(true);//是否支持自动换行
-        l.setFormLineWidth(10f);//设置Form的宽度
-    }
+    private RadioGroup.OnCheckedChangeListener RadioGroup = (group, checkedId) -> {
+        switch (group.getCheckedRadioButtonId()){
+            case R.id.button_day:
+                Log.d(TAG, ": 当天");
+                break;
+            case R.id.button_week:
+                Log.d(TAG, ": 前一周");
+                break;
+            case R.id.button_month:
+                Log.d(TAG, ": 前一月");
+                break;
+            default:
+                break;
+        }
+    };
 }
