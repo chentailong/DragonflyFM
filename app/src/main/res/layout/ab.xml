@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:layout_margin="5dp">
+
+    <TextView
+        android:id="@+id/practice_item_tv_shijian"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="50dp"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        tools:text="时间" />
+
+    <TextView
+        android:id="@+id/practice_item_tv_cishu"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:gravity="center_vertical"
+        android:paddingStart="1dp"
+        android:paddingEnd="5dp"
+        android:textColor="@color/colorPrimary"
+        tools:text="次数" />
+
+</FrameLayout>
