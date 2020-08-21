@@ -36,6 +36,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.record.AppVisitCount;
+import net.along.fragonflyfm.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +50,9 @@ import java.util.List;
 public class AnalyzeFragment extends Fragment {
     private final String[] titles = {"APP访问次数", "各地区访问比例（%）", "最受欢迎电台", "最受欢迎节目", "电台类型倾向"};
     private static final String TAG = "AnalyzeFragment";
+    private String pattern = "yyyy-MM-dd";
     private static final float MIN_TOUCH_DISTANCE = 10f;
     private TextView title_message;
-    private List<AppVisitCount> count = new ArrayList<>();
     private int chartIndex = 0;
     private View mRootView;
     private float touchX1;
@@ -68,7 +69,6 @@ public class AnalyzeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_analyze, container, false);
         initView();
-        LineChart();  //线型图表
         PieChart();   //饼图
         return mRootView;
     }
@@ -129,14 +129,17 @@ public class AnalyzeFragment extends Fragment {
 
     /**
      * App点击次数的线性图表测试，暂无真实数据
+     *  @param
+     * @param count
      */
-    private void LineChart() {
+    private void LineChart( int count) {
         ArrayList<Entry> entry = new ArrayList<>();
-        entry.add(new Entry(4, 10));
-        entry.add(new Entry(6, 15));
-        entry.add(new Entry(9, 20));
-        entry.add(new Entry(12, 5));
-        entry.add(new Entry(15, 30));
+        entry.add(new Entry(2,count));
+
+//        entry.add(new Entry(6, 15));
+//        entry.add(new Entry(9, 20));
+//        entry.add(new Entry(12, 5));
+//        entry.add(new Entry(15, 30));
         LineDataSet set1;
         Description desc = new Description();
         desc.setText("");
@@ -152,8 +155,8 @@ public class AnalyzeFragment extends Fragment {
             set1.setCircleColor(Color.RED);  //圆圈颜色
             set1.setFillColor(Color.RED);   //圆圈颜色
             set1.setLineWidth(1f);//设置线宽
-            set1.setCircleRadius(3f);//设置焦点圆心的大小
-            set1.setValueTextSize(9f);//设置显示值的文字大小
+            set1.setCircleRadius(4f);//设置焦点圆心的大小
+            set1.setValueTextSize(12f);//设置显示值的文字大小
             set1.setDrawFilled(false);//设置禁用范围背景填充
 
             XAxis xAxis = mLineChart1.getXAxis(); //X轴
@@ -250,13 +253,25 @@ public class AnalyzeFragment extends Fragment {
         }
     }
 
+
     /**
      * 点击选择时间，查询活动轨迹
      */
     private RadioGroup.OnCheckedChangeListener RadioGroup = (group, checkedId) -> {
-        switch (group.getCheckedRadioButtonId()){
+        switch (group.getCheckedRadioButtonId()) {
             case R.id.button_day:
+                String nowTime = DateUtils.getCurrentDate(pattern);  //获取当前时间
+                List<AppVisitCount> list = AppVisitCount.listAll(AppVisitCount.class); //查询所有数据
+                Log.e(TAG, ": " + list);
+                AppVisitCount app = AppVisitCount.findById(AppVisitCount.class, 4);  //根据ID查询数据
+                int count = app.getCount();  //次数
+                long timeStamp = app.getTimeStamp();  //时间戳
+                String time = DateUtils.getDateString(timeStamp, pattern);   //将时间戳转化成字符串显示出来
+                Log.e(TAG,  time + count);
                 Log.d(TAG, ": 当天");
+                if (nowTime != time) {
+                    LineChart(count);  //线型图表
+                }
                 break;
             case R.id.button_week:
                 Log.d(TAG, ": 前一周");

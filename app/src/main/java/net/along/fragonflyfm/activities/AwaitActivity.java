@@ -93,11 +93,17 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
         Log.e(TAG, "新增一次访问APP次数:" + 1);
     }
 
+    /**
+     * 初始化视图组件，点击跳过
+     */
     private void initVIew() {
         mTextView = findViewById(R.id.await_tv_count_down);  //跳过
         mTextView.setOnClickListener(this); //跳过的监听事件
     }
 
+    /**
+     * 启动服务 开始下载初始数据
+     */
     private void startService() {
         Intent getFmItemJs = new Intent(this, FMItemJsonService.class);
         startService(getFmItemJs);
