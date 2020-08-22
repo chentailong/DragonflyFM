@@ -65,12 +65,12 @@
         android:layout_height="match_parent" />
 
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/fragment_chart_b"
+        android:id="@+id/fragment_chart_b1"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/fragment_chart_l2"
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/fragment_chart_b2"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -20,7 +20,6 @@ import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.RadarChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -30,15 +29,18 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.orm.SugarRecord;
 
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.record.AppVisitCount;
-import net.along.fragonflyfm.util.DateUtils;
+import net.along.fragonflyfm.util.DataBaseUtil;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -60,10 +62,13 @@ public class AnalyzeFragment extends Fragment {
     private Chart[] mChart;
     private PieChart mPieChart;
     private LineChart mLineChart1;
-    private LineChart mLineChart2;
-    private BarChart mBarChart;
+    private BarChart mBarChart1;
+    private BarChart mBarChart2;
     private RadarChart mRadarChart;
     private RadioGroup mRadioGroup;
+    private long id;
+    private Iterator visit;
+    private String mNowTime;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -89,10 +94,10 @@ public class AnalyzeFragment extends Fragment {
         dots = new View[]{dot1, dot2, dot3, dot4, dot5};
         mPieChart = mRootView.findViewById(R.id.fragment_chart_p);
         mLineChart1 = mRootView.findViewById(R.id.fragment_chart_l1);
-        mLineChart2 = mRootView.findViewById(R.id.fragment_chart_l2);
-        mBarChart = mRootView.findViewById(R.id.fragment_chart_b);
+        mBarChart1 = mRootView.findViewById(R.id.fragment_chart_b1);
+        mBarChart2 = mRootView.findViewById(R.id.fragment_chart_b2);
         mRadarChart = mRootView.findViewById(R.id.fragment_chart_r);
-        mChart = new Chart[]{mLineChart1, mPieChart, mBarChart, mLineChart2, mRadarChart};
+        mChart = new Chart[]{mLineChart1, mPieChart, mBarChart1, mBarChart2, mRadarChart};
         for (Chart chart : mChart) {
             chart.setTouchEnabled(false);     //可滑动
             chart.setVisibility(View.GONE);  //隐藏其他视图
@@ -128,22 +133,22 @@ public class AnalyzeFragment extends Fragment {
     }
 
     /**
-     * App点击次数的线性图表测试，暂无真实数据
-     *  @param
-     * @param count
+     * App点击次数的折线图，实现次数的传递显示
+     *
+     * @param
+     * @param weekCount
+     * @param weekCount
      */
-    private void LineChart( int count) {
-        ArrayList<Entry> entry = new ArrayList<>();
-        entry.add(new Entry(2,count));
-
-//        entry.add(new Entry(6, 15));
-//        entry.add(new Entry(9, 20));
-//        entry.add(new Entry(12, 5));
-//        entry.add(new Entry(15, 30));
+    private void LineChart(ArrayList<Integer> weekCount) {
         LineDataSet set1;
-        Description desc = new Description();
-        desc.setText("");
-        mLineChart1.setDescription(desc);
+        //显示数据，传入访问次数和日期
+        ArrayList<Entry> entry = new ArrayList<>();
+        for (Integer i = 0; i < weekCount.size(); i++) {
+            float valueX = i;
+            float valueY = weekCount.get(i);
+            entry.add(new Entry(valueX, valueY));
+        }
+        mLineChart1.getDescription().setEnabled(false);  //取消Description字体的显示
         if (mLineChart1.getData() != null && mLineChart1.getData().getDataSetCount() > 0) {
             set1 = (LineDataSet) mLineChart1.getData().getDataSetByIndex(0);
             set1.setValues(entry);
@@ -158,6 +163,7 @@ public class AnalyzeFragment extends Fragment {
             set1.setCircleRadius(4f);//设置焦点圆心的大小
             set1.setValueTextSize(12f);//设置显示值的文字大小
             set1.setDrawFilled(false);//设置禁用范围背景填充
+            set1.setValueFormatter(new DefaultAxisValueFormatter(0));
 
             XAxis xAxis = mLineChart1.getXAxis(); //X轴
             xAxis.setEnabled(true);//设置轴启用或禁用 如果禁用以下的设置全部不生效
@@ -166,16 +172,12 @@ public class AnalyzeFragment extends Fragment {
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//设置x轴的显示位置
             xAxis.setAvoidFirstLastClipping(true);//图表将避免第一个和最后一个标签条目被减掉在图表或屏幕的边缘
             xAxis.setLabelRotationAngle(10f);//设置x轴标签的旋转角
+
             YAxis rightAxis = mLineChart1.getAxisRight();  //获取右边的轴线
             rightAxis.setEnabled(false);//设置图表右边的y轴禁用
-            YAxis leftAxis = mLineChart1.getAxisLeft();//获取左边的轴线
-            leftAxis.setDrawZeroLine(true);//是否绘制0所在的网格线
-            Legend l = mLineChart1.getLegend();// 设置图例
-            l.setTextSize(10f);//设置文字大小
-            l.setForm(Legend.LegendForm.CIRCLE);//正方形，圆形或线
-            l.setFormSize(10f); // 设置Form的大小
-            l.setWordWrapEnabled(true);//是否支持自动换行
-            l.setFormLineWidth(10f);//设置Form的宽度
+
+            YAxis leftAxis = mLineChart1.getAxisLeft();
+            leftAxis.setStartAtZero(true);
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<>(); //保存LineDataSet集合
             dataSets.add(set1);  //保存数据设置
@@ -260,24 +262,49 @@ public class AnalyzeFragment extends Fragment {
     private RadioGroup.OnCheckedChangeListener RadioGroup = (group, checkedId) -> {
         switch (group.getCheckedRadioButtonId()) {
             case R.id.button_day:
-                String nowTime = DateUtils.getCurrentDate(pattern);  //获取当前时间
-                List<AppVisitCount> list = AppVisitCount.listAll(AppVisitCount.class); //查询所有数据
-                Log.e(TAG, ": " + list);
-                AppVisitCount app = AppVisitCount.findById(AppVisitCount.class, 4);  //根据ID查询数据
-                int count = app.getCount();  //次数
-                long timeStamp = app.getTimeStamp();  //时间戳
-                String time = DateUtils.getDateString(timeStamp, pattern);   //将时间戳转化成字符串显示出来
-                Log.e(TAG,  time + count);
-                Log.d(TAG, ": 当天");
-                if (nowTime != time) {
-                    LineChart(count);  //线型图表
+                //访问sugar数据库
+                visit = AppVisitCount.findAll(AppVisitCount.class);
+                while (visit.hasNext()) {
+                    AppVisitCount tableObj = (AppVisitCount) visit.next();
+                    SugarRecord sugarRecord = tableObj;
+                    id = sugarRecord.getId(); //获取最新id
+                }
+                //获取当前时间
+                mNowTime = DataBaseUtil.getCurrentDate(pattern);
+                AppVisitCount DayVisitCount = AppVisitCount.findById(AppVisitCount.class, id);  //根据ID查询数据
+                int count = DayVisitCount.getCount();  //次数
+                ArrayList<Integer> DayCount = new ArrayList<>();  //将次数装入
+                DayCount.add(count);
+                long timeStamp = DayVisitCount.getTimeStamp();  //时间戳
+                String time = DataBaseUtil.getDateString(timeStamp, pattern);   //将时间戳转化成字符串显示出来
+                Log.e(TAG, timeStamp + " , " + time + " , " + count);
+                if (mNowTime != time) {
+                    LineChart(DayCount);  //线型图表
                 }
                 break;
+
             case R.id.button_week:
-                Log.d(TAG, ": 前一周");
+                Log.d(TAG, "前周 ");
+                ArrayList<Integer> WeekCount = new ArrayList<>();
+                List<AppVisitCount> WeekVisitCount = AppVisitCount.listAll(AppVisitCount.class);
+                for (int i = 0; i < WeekVisitCount.size(); i++) {
+                    if (i < 8) {
+                        WeekCount.add(WeekVisitCount.get(i).getCount());
+                    }
+                }
+                LineChart(WeekCount);
+                Log.e(TAG, ":总次数 " + WeekCount);
                 break;
+
             case R.id.button_month:
                 Log.d(TAG, ": 前一月");
+                ArrayList<Integer> MonthCount = new ArrayList<>();
+                List<AppVisitCount> MonthVisitCount = AppVisitCount.listAll(AppVisitCount.class);
+                for (int i = 0; i < MonthVisitCount.size(); i++) {
+                    MonthCount.add(MonthVisitCount.get(i).getCount());
+                }
+                LineChart(MonthCount);
+                Log.e(TAG, ":总次数 " + MonthCount);
                 break;
             default:
                 break;
