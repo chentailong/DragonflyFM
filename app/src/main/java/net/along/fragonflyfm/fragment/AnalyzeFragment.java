@@ -2,6 +2,7 @@ package net.along.fragonflyfm.fragment;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -31,17 +33,21 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.orm.SugarRecord;
 
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.record.AppVisitCount;
-import net.along.fragonflyfm.util.DataBaseUtil;
+import net.along.fragonflyfm.record.RegionTable;
+import net.along.fragonflyfm.util.DateBaseUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 创建者 by:陈泰龙
@@ -49,10 +55,11 @@ import java.util.List;
  * 2020/7/1
  **/
 
+@RequiresApi(api = Build.VERSION_CODES.M)
 public class AnalyzeFragment extends Fragment {
     private final String[] titles = {"APP访问次数", "各地区访问比例（%）", "最受欢迎电台", "最受欢迎节目", "电台类型倾向"};
     private static final String TAG = "AnalyzeFragment";
-    private String pattern = "yyyy-MM-dd";
+    private String pattern = "MM-dd";
     private static final float MIN_TOUCH_DISTANCE = 10f;
     private TextView title_message;
     private int chartIndex = 0;
@@ -69,12 +76,12 @@ public class AnalyzeFragment extends Fragment {
     private long id;
     private Iterator visit;
     private String mNowTime;
+    private Map<String, Integer> mMap;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_analyze, container, false);
         initView();
-        PieChart();   //饼图
         return mRootView;
     }
 
@@ -132,73 +139,64 @@ public class AnalyzeFragment extends Fragment {
         mLineChart1.setVisibility(View.VISIBLE);
     }
 
+
     /**
      * App点击次数的折线图，实现次数的传递显示
      *
-     * @param
      * @param weekCount
-     * @param weekCount
+     * @param weekDate
      */
-    private void LineChart(ArrayList<Integer> weekCount) {
-        LineDataSet set1;
-        //显示数据，传入访问次数和日期
+    private void LineChart(ArrayList<Integer> weekCount, ArrayList<Long> weekDate) {
+        //显示数据，传入访问次数
         ArrayList<Entry> entry = new ArrayList<>();
+        List<String> time = new ArrayList<>();
+        int j = 0;
         for (Integer i = 0; i < weekCount.size(); i++) {
-            float valueX = i;
-            float valueY = weekCount.get(i);
-            entry.add(new Entry(valueX, valueY));
+            entry.add(new Entry(j, weekCount.get(i)));
+            j++;
         }
-        mLineChart1.getDescription().setEnabled(false);  //取消Description字体的显示
-        if (mLineChart1.getData() != null && mLineChart1.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) mLineChart1.getData().getDataSetByIndex(0);
-            set1.setValues(entry);
-            mLineChart1.getData().notifyDataChanged();
-            mLineChart1.notifyDataSetChanged();
-        } else {
-            set1 = new LineDataSet(entry, "X：日期  Y：访问次数");
-            set1.setColor(Color.RED); //字体颜色
-            set1.setCircleColor(Color.RED);  //圆圈颜色
-            set1.setFillColor(Color.RED);   //圆圈颜色
-            set1.setLineWidth(1f);//设置线宽
-            set1.setCircleRadius(4f);//设置焦点圆心的大小
-            set1.setValueTextSize(12f);//设置显示值的文字大小
-            set1.setDrawFilled(false);//设置禁用范围背景填充
-            set1.setValueFormatter(new DefaultAxisValueFormatter(0));
+        LineDataSet lineDataSet = new LineDataSet(entry, "");
+        lineDataSet.setColor(Color.parseColor("#F15A4A"));
+        lineDataSet.setLineWidth(1.6f);//线宽度
+        lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER); //线条平滑
+        lineDataSet.setValueTextSize(12f);  //设置显示值的文字大小
+        lineDataSet.setValueFormatter(new DefaultAxisValueFormatter(0));    //不要小数点
+        LineData data = new LineData(lineDataSet);    //设置数据
 
-            XAxis xAxis = mLineChart1.getXAxis(); //X轴
-            xAxis.setEnabled(true);//设置轴启用或禁用 如果禁用以下的设置全部不生效
-            xAxis.setDrawGridLines(false);//设置x轴上每个点对应的线
-            xAxis.setDrawLabels(true);//绘制标签  指x轴上的对应数值
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//设置x轴的显示位置
-            xAxis.setAvoidFirstLastClipping(true);//图表将避免第一个和最后一个标签条目被减掉在图表或屏幕的边缘
-            xAxis.setLabelRotationAngle(10f);//设置x轴标签的旋转角
+        XAxis xAxis = mLineChart1.getXAxis();     //得到X轴
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); //设置X轴的位置（默认在上方)
+        xAxis.setDrawGridLines(false);   //不显示网格线
+        xAxis.setGranularity(1f); //设置X轴坐标之间的最小间隔
+        xAxis.setLabelRotationAngle(45);     //标签倾斜
+        YAxis yAxis = mLineChart1.getAxisLeft(); //得到Y轴
+        YAxis rightYAxis = mLineChart1.getAxisRight();
+        rightYAxis.setEnabled(false); //右侧Y轴不显示
+        yAxis.setDrawGridLines(true); //不显示网格线
+        yAxis.setGranularity(10f);   //设置Y轴坐标之间的最小间隔
+        yAxis.setAxisMinimum(0f); //设置从Y轴值
 
-            YAxis rightAxis = mLineChart1.getAxisRight();  //获取右边的轴线
-            rightAxis.setEnabled(false);//设置图表右边的y轴禁用
+        mLineChart1.getDescription().setEnabled(false); //隐藏提示信息
+        mLineChart1.setData(data); //设置数据
+        mLineChart1.invalidate();  //图标刷新
 
-            YAxis leftAxis = mLineChart1.getAxisLeft();
-            leftAxis.setStartAtZero(true);
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>(); //保存LineDataSet集合
-            dataSets.add(set1);  //保存数据设置
-            LineData data = new LineData(dataSets); //创建LineData对象 属于LineChart折线图的数据集合
-            mLineChart1.setData(data);  // 添加到图表中
-            mLineChart1.invalidate(); //绘制图表
-        }
     }
 
     /**
      * 各地区访问次数的饼图测试，暂无真实数据
      */
-    private void PieChart() {
+    private void PieChart() { //ArrayList<Integer> count, ArrayList<String> regionName
         ArrayList<PieEntry> entry = new ArrayList<>();
         entry.clear();
-        entry.add(new PieEntry(10f, "广西"));
-        entry.add(new PieEntry(30f, "广东"));
-        entry.add(new PieEntry(20f, "北京"));
-        entry.add(new PieEntry(20f, "上海"));
-        entry.add(new PieEntry(10f, "天津"));
-        entry.add(new PieEntry(10f, "海南"));
+//        for (int j = 0; j < regionName.size(); j++) {
+//            entry.add(new PieEntry(count.get(j), regionName.get(j)));
+//        }
+
+        Iterator<String> iterator =mMap.keySet().iterator();
+        while (iterator.hasNext()){
+            String key = iterator.next();
+            entry.add(new PieEntry(mMap.get(key),key));
+        }
+
         mPieChart.setUsePercentValues(true); //设置是否显示百分比
         mPieChart.getDescription().setEnabled(false);  //取消Description字体的显示
         mPieChart.setExtraOffsets(5, 5, 5, 5);
@@ -262,49 +260,135 @@ public class AnalyzeFragment extends Fragment {
     private RadioGroup.OnCheckedChangeListener RadioGroup = (group, checkedId) -> {
         switch (group.getCheckedRadioButtonId()) {
             case R.id.button_day:
-                //访问sugar数据库
-                visit = AppVisitCount.findAll(AppVisitCount.class);
+                //APP访问次数的实现
+                visit = AppVisitCount.findAll(AppVisitCount.class);  //访问sugar数据库
                 while (visit.hasNext()) {
                     AppVisitCount tableObj = (AppVisitCount) visit.next();
                     SugarRecord sugarRecord = tableObj;
                     id = sugarRecord.getId(); //获取最新id
                 }
-                //获取当前时间
-                mNowTime = DataBaseUtil.getCurrentDate(pattern);
+                mNowTime = DateBaseUtil.getCurrentDate(pattern);   //获取当前时间
                 AppVisitCount DayVisitCount = AppVisitCount.findById(AppVisitCount.class, id);  //根据ID查询数据
-                int count = DayVisitCount.getCount();  //次数
+                int VisitCount = DayVisitCount.getCount();  //次数
                 ArrayList<Integer> DayCount = new ArrayList<>();  //将次数装入
-                DayCount.add(count);
-                long timeStamp = DayVisitCount.getTimeStamp();  //时间戳
-                String time = DataBaseUtil.getDateString(timeStamp, pattern);   //将时间戳转化成字符串显示出来
-                Log.e(TAG, timeStamp + " , " + time + " , " + count);
+                ArrayList<Long> DayDate = new ArrayList<>();  //将时间装入
+                DayCount.add(VisitCount);
+                long VisitTimeStamp = DayVisitCount.getTimeStamp();  //时间戳
+                DayDate.add(VisitTimeStamp);
+                String time = DateBaseUtil.getDateString(VisitTimeStamp, pattern);   //将时间戳转化成字符串显示出来
+                Log.e(TAG, VisitTimeStamp + " , " + time + " , " + VisitCount);
                 if (mNowTime != time) {
-                    LineChart(DayCount);  //线型图表
+                    LineChart(DayCount, DayDate);  //线型图表
                 }
-                break;
+                //============各地区访问比例=====================
+                long nowTimeStamp = System.currentTimeMillis();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date(nowTimeStamp));
+                visit = RegionTable.findAll(RegionTable.class);  //访问sugar数据库
+                mMap = new HashMap<>();
+                while (visit.hasNext()) {
+                    RegionTable tableObj = (RegionTable) visit.next();
+                    long stamp = tableObj.getStamp();
+                    Calendar thisCalendar = Calendar.getInstance();
+                    thisCalendar.setTime(new Date(stamp));
 
+                    if (DateBaseUtil.isToday(calendar, thisCalendar)) {
+                        mMap.put(tableObj.getProvince(),tableObj.getCount());
+                    }
+                }
+                PieChart();
+                break;
+//===================================================================================================================================================
             case R.id.button_week:
                 Log.d(TAG, "前周 ");
                 ArrayList<Integer> WeekCount = new ArrayList<>();
+                ArrayList<Long> WeekDate = new ArrayList<>();
                 List<AppVisitCount> WeekVisitCount = AppVisitCount.listAll(AppVisitCount.class);
                 for (int i = 0; i < WeekVisitCount.size(); i++) {
-                    if (i < 8) {
+                    if (i < 7) {
                         WeekCount.add(WeekVisitCount.get(i).getCount());
+                        WeekDate.add(WeekVisitCount.get(i).getTimeStamp());
+                    }
+                    continue;
+                }
+                LineChart(WeekCount, WeekDate);
+                Log.e(TAG, ":总次数 " + WeekCount + " , " + WeekDate);
+                //=====================各地区访问比例===================================
+                ArrayList<String> WeekRegion = new ArrayList<>(); //访问地区
+                Iterator<RegionTable> iterator = SugarRecord.findAll(RegionTable.class);
+                List<RegionTable> tables = new ArrayList<>();
+                //获取数据
+                while (iterator.hasNext()) {
+                    tables.add(iterator.next());
+                }
+                for (RegionTable table : tables) {
+                    String Area = table.getProvince();
+                    boolean judge = false;
+                    for (String key : WeekRegion) {
+                        if (key.equals(Area)) {
+                            judge = true;
+                            break;
+                        }
+                    }
+                    if (!judge) {
+                        WeekRegion.add(Area);
                     }
                 }
-                LineChart(WeekCount);
-                Log.e(TAG, ":总次数 " + WeekCount);
+                mMap = new HashMap<>();
+                for (String key : WeekRegion) {
+                    int count = 0;
+                    for (RegionTable table : tables){
+                        if (table.getProvince().equals(key)){
+                            count +=table.getCount();
+                        }
+                    }
+                    mMap.put(key,count);
+                }
+                PieChart();
                 break;
-
+//===================================================================================================================================================
             case R.id.button_month:
                 Log.d(TAG, ": 前一月");
                 ArrayList<Integer> MonthCount = new ArrayList<>();
+                ArrayList<Long> MonthDate = new ArrayList<>();
                 List<AppVisitCount> MonthVisitCount = AppVisitCount.listAll(AppVisitCount.class);
                 for (int i = 0; i < MonthVisitCount.size(); i++) {
                     MonthCount.add(MonthVisitCount.get(i).getCount());
+                    MonthDate.add(MonthVisitCount.get(i).getTimeStamp());
                 }
-                LineChart(MonthCount);
-                Log.e(TAG, ":总次数 " + MonthCount);
+                LineChart(MonthCount, MonthDate);
+                //=====================各地区访问比例===================================
+                ArrayList<String> MonthRegion = new ArrayList<>(); //访问地区
+                Iterator<RegionTable> iterators = SugarRecord.findAll(RegionTable.class);
+                List<RegionTable> tab = new ArrayList<>();
+                //获取数据
+                while (iterators.hasNext()) {
+                    tab.add(iterators.next());
+                }
+                for (RegionTable table : tab) {
+                    String Area = table.getProvince();
+                    boolean judge = false;
+                    for (String key : MonthRegion) {
+                        if (key.equals(Area)) {
+                            judge = true;
+                            break;
+                        }
+                    }
+                    if (!judge) {
+                        MonthRegion.add(Area);
+                    }
+                }
+                mMap = new HashMap<>();
+                for (String key : MonthRegion) {
+                    int count = 0;
+                    for (RegionTable table : tab){
+                        if (table.getProvince().equals(key)){
+                            count +=table.getCount();
+                        }
+                    }
+                    mMap.put(key,count);
+                }
+                PieChart();
                 break;
             default:
                 break;

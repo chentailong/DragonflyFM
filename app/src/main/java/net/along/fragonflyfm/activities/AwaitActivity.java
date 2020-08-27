@@ -19,7 +19,7 @@ import net.along.fragonflyfm.fragment.AwaitFragment;
 import net.along.fragonflyfm.record.AppVisitCount;
 import net.along.fragonflyfm.service.FMItemJsonService;
 import net.along.fragonflyfm.service.JSONService;
-import net.along.fragonflyfm.util.DataBaseUtil;
+import net.along.fragonflyfm.util.DateBaseUtil;
 import net.lzzy.commutils.BaseActivity;
 
 import java.util.Calendar;
@@ -75,7 +75,7 @@ public class AwaitActivity extends BaseActivity implements AwaitFragment.OnCance
             long DataTimeStamp = tableObj.getTimeStamp();  //获取数据库中的时间戳
             Calendar DataCalendar = Calendar.getInstance();
             DataCalendar.setTime(new Date(DataTimeStamp));
-            if (DataBaseUtil.isToday(calendar, DataCalendar)) {  //判断是否是同一天、
+            if (DateBaseUtil.isToday(calendar, DataCalendar)) {  //判断是否是同一天、
                 int count = tableObj.getCount() + 1;
                 SugarRecord sugarRecord = tableObj;
                 long id = sugarRecord.getId();

@@ -18,7 +18,7 @@ import net.along.fragonflyfm.activities.ProgramActivity;
 import net.along.fragonflyfm.entity.Broadcasters;
 import net.along.fragonflyfm.entity.Program;
 import net.along.fragonflyfm.record.ProgramGreet;
-import net.along.fragonflyfm.util.DataBaseUtil;
+import net.along.fragonflyfm.util.DateBaseUtil;
 import net.along.fragonflyfm.util.PlayerActivity;
 
 import java.util.Calendar;
@@ -106,7 +106,7 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
             long DataTimeStamp = programIterator.getTimeStamp();  //数据库时间戳
             Calendar DataCalendar = Calendar.getInstance();
             DataCalendar.setTime(new Date(DataTimeStamp));
-            if (DataBaseUtil.isToday(calendar, DataCalendar)) {  //判断这一记录是否是今天产生的
+            if (DateBaseUtil.isToday(calendar, DataCalendar)) {  //判断这一记录是否是今天产生的
                 int thisProgramId = programIterator.getProgramId();
                 String thisProgramName = programIterator.getProgramName();
                 if (programId == thisProgramId && programName == thisProgramName) { //判断这个节目的id和节目名是否和点击的节目一致

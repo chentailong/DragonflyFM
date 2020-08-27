@@ -33,7 +33,7 @@ import net.along.fragonflyfm.entity.SearchesData;
 import net.along.fragonflyfm.record.RegionTable;
 import net.along.fragonflyfm.service.FMItemJsonService;
 import net.along.fragonflyfm.service.JSONService;
-import net.along.fragonflyfm.util.DataBaseUtil;
+import net.along.fragonflyfm.util.DateBaseUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -147,7 +147,7 @@ public class SearchesFragment extends Fragment {
             long thisTimeStamp = tableObj.getStamp();//获取数据库的时间戳
             Calendar thisCalendar = Calendar.getInstance();
             thisCalendar.setTime(new Date(thisTimeStamp));
-            if (DataBaseUtil.isToday(calendar, thisCalendar)) {//如果是同一天
+            if (DateBaseUtil.isToday(calendar, thisCalendar)) {//如果是同一天
                 if (tableObj.getProvince().equals(provinceName)) {
                     int count = tableObj.getCount() + 1;
                     SugarRecord sugarRecord = tableObj;
@@ -157,7 +157,6 @@ public class SearchesFragment extends Fragment {
                     Log.e(TAG, "地区访问次数：" + count);
                     return;
                 }
-
             } else {
                 continue;
             }

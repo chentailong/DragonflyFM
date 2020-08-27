@@ -29,7 +29,7 @@ import net.along.fragonflyfm.entity.SearchesData;
 import net.along.fragonflyfm.record.LikeRadio;
 import net.along.fragonflyfm.record.RadioTendency;
 import net.along.fragonflyfm.service.FMItemJsonService;
-import net.along.fragonflyfm.util.DataBaseUtil;
+import net.along.fragonflyfm.util.DateBaseUtil;
 
 import org.json.JSONArray;
 
@@ -141,7 +141,7 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             long thisTimeStamp = tableObj.getTimeStamp();//获取数据库的时间戳
             Calendar thisCalendar = Calendar.getInstance();
             thisCalendar.setTime(new Date(thisTimeStamp));
-            if (DataBaseUtil.isToday(calendar, thisCalendar)) {//如果是同一天
+            if (DateBaseUtil.isToday(calendar, thisCalendar)) {//如果是同一天
                 if (categoryId == tableObj.getCategoryId() && categoryTitle.equals(tableObj.getCategoryTitle())) {
                     int count = tableObj.getCount() + 1;
                     long id = tableObj.getId();
@@ -181,7 +181,7 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             long thisTimeStamp = tableObj.getTimeStamp();//获取数据库的时间戳
             Calendar thisCalendar = Calendar.getInstance();
             thisCalendar.setTime(new Date(thisTimeStamp));
-            if (DataBaseUtil.isToday(calendar, thisCalendar)) {//如果是同一天
+            if (DateBaseUtil.isToday(calendar, thisCalendar)) {//如果是同一天
                 if (channelId == tableObj.getChannelId() && channelTitle.equals(tableObj.getChannel())) {//判断是否是同一个电台
                     int count = tableObj.getCount() + 1;
                     long id = tableObj.getId();

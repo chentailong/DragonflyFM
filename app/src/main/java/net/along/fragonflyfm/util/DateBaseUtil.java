@@ -11,7 +11,7 @@ import java.util.Locale;
  * 2020/8/21
  **/
 
-public class DataBaseUtil {
+public class DateBaseUtil {
 
     /**
      * 判断是否是同一天
