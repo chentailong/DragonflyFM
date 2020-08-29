@@ -19,12 +19,16 @@ import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -32,12 +36,15 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.orm.SugarRecord;
 
 import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.record.AppVisitCount;
+import net.along.fragonflyfm.record.LikeRadio;
+import net.along.fragonflyfm.record.ProgramGreet;
 import net.along.fragonflyfm.record.RegionTable;
 import net.along.fragonflyfm.util.DateBaseUtil;
 
@@ -70,7 +77,7 @@ public class AnalyzeFragment extends Fragment {
     private PieChart mPieChart;
     private LineChart mLineChart1;
     private BarChart mBarChart1;
-    private BarChart mBarChart2;
+    private HorizontalBarChart mBarChart2;
     private RadarChart mRadarChart;
     private RadioGroup mRadioGroup;
     private long id;
@@ -139,20 +146,20 @@ public class AnalyzeFragment extends Fragment {
         mLineChart1.setVisibility(View.VISIBLE);
     }
 
-
     /**
      * App点击次数的折线图，实现次数的传递显示
      *
      * @param weekCount
-     * @param weekDate
      */
-    private void LineChart(ArrayList<Integer> weekCount, ArrayList<Long> weekDate) {
+    private void LineChart(ArrayList<Integer> weekCount, ArrayList<Long> time) {
         //显示数据，传入访问次数
         ArrayList<Entry> entry = new ArrayList<>();
-        List<String> time = new ArrayList<>();
+        List<String> times = new ArrayList<>();
         int j = 0;
         for (Integer i = 0; i < weekCount.size(); i++) {
             entry.add(new Entry(j, weekCount.get(i)));
+            String Time = DateBaseUtil.getDateString(time.get(i), pattern);   //将时间戳转化成字符串显示出来
+            times.add(Time);
             j++;
         }
         LineDataSet lineDataSet = new LineDataSet(entry, "");
@@ -168,6 +175,7 @@ public class AnalyzeFragment extends Fragment {
         xAxis.setDrawGridLines(false);   //不显示网格线
         xAxis.setGranularity(1f); //设置X轴坐标之间的最小间隔
         xAxis.setLabelRotationAngle(45);     //标签倾斜
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(times));
         YAxis yAxis = mLineChart1.getAxisLeft(); //得到Y轴
         YAxis rightYAxis = mLineChart1.getAxisRight();
         rightYAxis.setEnabled(false); //右侧Y轴不显示
@@ -182,19 +190,15 @@ public class AnalyzeFragment extends Fragment {
     }
 
     /**
-     * 各地区访问次数的饼图测试，暂无真实数据
+     * 各地区访问次数的饼图
      */
-    private void PieChart() { //ArrayList<Integer> count, ArrayList<String> regionName
+    private void PieChart() {
         ArrayList<PieEntry> entry = new ArrayList<>();
         entry.clear();
-//        for (int j = 0; j < regionName.size(); j++) {
-//            entry.add(new PieEntry(count.get(j), regionName.get(j)));
-//        }
-
-        Iterator<String> iterator =mMap.keySet().iterator();
-        while (iterator.hasNext()){
+        Iterator<String> iterator = mMap.keySet().iterator();
+        while (iterator.hasNext()) {
             String key = iterator.next();
-            entry.add(new PieEntry(mMap.get(key),key));
+            entry.add(new PieEntry(mMap.get(key), key));
         }
 
         mPieChart.setUsePercentValues(true); //设置是否显示百分比
@@ -238,6 +242,74 @@ public class AnalyzeFragment extends Fragment {
     }
 
     /**
+     * 最受欢迎电台的柱形图
+     *
+     * @param count
+     * @param name
+     */
+    private void BarChart(ArrayList<Integer> count, ArrayList<String> name) {
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
+        for (int i = 0; i < count.size(); i++) {
+            entries.add(new BarEntry(i, count.get(i)));
+            names.add(name.get(i));
+        }
+        BarDataSet barDataSet = new BarDataSet(entries, "最受欢迎电台");
+        BarData data = new BarData(barDataSet);
+        barDataSet.setValueFormatter(new DefaultAxisValueFormatter(0));
+        XAxis xAxis = mBarChart1.getXAxis();
+        xAxis.setGranularity(1);
+        xAxis.setLabelCount(10);
+        xAxis.setLabelRotationAngle(-90);
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(names));
+        YAxis rightAxis = mBarChart1.getAxisRight();
+        rightAxis.setEnabled(false);
+        mBarChart1.setData(data);
+        mBarChart1.invalidate();
+        mBarChart1.getDescription().setEnabled(false);
+        mBarChart1.animateXY(3000, 3000);//为X轴Y轴设置动画
+        mBarChart1.setDrawGridBackground(false);
+        mBarChart1.setDrawBorders(false);
+    }
+
+    /**
+     * 最受欢迎的节目的横向柱形图
+     *
+     * @param name
+     * @param count
+     */
+    private void HBarChart(List<String> name, List<Integer> count) {
+        List<BarEntry> entries = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
+        for (int i = 0; i < count.size(); i++) {
+            names.add(name.get(i));
+            entries.add(new BarEntry(i, count.get(i)));
+        }
+        BarDataSet barDataSet = new BarDataSet(entries, "最受欢迎节目");
+        BarData data = new BarData(barDataSet);
+        data.setValueTextSize(10);
+        XAxis xAxis = mBarChart2.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1);
+        xAxis.setLabelCount(10);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(names));
+        YAxis yl = mBarChart2.getAxisLeft();
+        yl.setEnabled(false);
+//        YAxis yr = mBarChart2.getAxisRight();
+//        yr.setDrawGridLines(false);
+//        yr.setGranularity(1);
+//        yr.setAxisMinimum(0);
+        mBarChart2.setFitBars(true);
+        mBarChart2.animateXY(3000, 3000);//为X轴Y轴设置动画
+        mBarChart2.setData(data);
+        mBarChart2.invalidate();
+        mBarChart2.getDescription().setEnabled(false);
+    }
+
+    /**
      * 切换时底部圆圈颜色变化 And 标题变化
      */
     private void switchChart() {
@@ -260,7 +332,7 @@ public class AnalyzeFragment extends Fragment {
     private RadioGroup.OnCheckedChangeListener RadioGroup = (group, checkedId) -> {
         switch (group.getCheckedRadioButtonId()) {
             case R.id.button_day:
-                //APP访问次数的实现
+                //=========================APP访问次数的实现================================
                 visit = AppVisitCount.findAll(AppVisitCount.class);  //访问sugar数据库
                 while (visit.hasNext()) {
                     AppVisitCount tableObj = (AppVisitCount) visit.next();
@@ -276,11 +348,10 @@ public class AnalyzeFragment extends Fragment {
                 long VisitTimeStamp = DayVisitCount.getTimeStamp();  //时间戳
                 DayDate.add(VisitTimeStamp);
                 String time = DateBaseUtil.getDateString(VisitTimeStamp, pattern);   //将时间戳转化成字符串显示出来
-                Log.e(TAG, VisitTimeStamp + " , " + time + " , " + VisitCount);
                 if (mNowTime != time) {
                     LineChart(DayCount, DayDate);  //线型图表
                 }
-                //============各地区访问比例=====================
+                //=============================各地区访问比例===============================
                 long nowTimeStamp = System.currentTimeMillis();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date(nowTimeStamp));
@@ -291,12 +362,28 @@ public class AnalyzeFragment extends Fragment {
                     long stamp = tableObj.getStamp();
                     Calendar thisCalendar = Calendar.getInstance();
                     thisCalendar.setTime(new Date(stamp));
-
                     if (DateBaseUtil.isToday(calendar, thisCalendar)) {
-                        mMap.put(tableObj.getProvince(),tableObj.getCount());
+                        mMap.put(tableObj.getProvince(), tableObj.getCount());
                     }
                 }
                 PieChart();
+                //==============================最受欢迎电台====================================
+                ArrayList<Integer> LikeCount = new ArrayList<>();
+                ArrayList<String> LikeName = new ArrayList<>();
+                visit = LikeRadio.findAll(LikeRadio.class);  //访问sugar数据库
+                while (visit.hasNext()) {
+                    LikeRadio tableObj = (LikeRadio) visit.next();
+                    long stamp = tableObj.getTimeStamp();
+                    Calendar thisCalendar = Calendar.getInstance();
+                    thisCalendar.setTime(new Date(stamp));
+                    if (DateBaseUtil.isToday(calendar, thisCalendar)) {
+                        LikeCount.add(tableObj.getCount());
+                        LikeName.add(tableObj.getChannel());
+                    }
+                }
+                BarChart(LikeCount, LikeName);
+                //============================最受欢迎节目=====================================
+
                 break;
 //===================================================================================================================================================
             case R.id.button_week:
@@ -312,7 +399,6 @@ public class AnalyzeFragment extends Fragment {
                     continue;
                 }
                 LineChart(WeekCount, WeekDate);
-                Log.e(TAG, ":总次数 " + WeekCount + " , " + WeekDate);
                 //=====================各地区访问比例===================================
                 ArrayList<String> WeekRegion = new ArrayList<>(); //访问地区
                 Iterator<RegionTable> iterator = SugarRecord.findAll(RegionTable.class);
@@ -337,14 +423,78 @@ public class AnalyzeFragment extends Fragment {
                 mMap = new HashMap<>();
                 for (String key : WeekRegion) {
                     int count = 0;
-                    for (RegionTable table : tables){
-                        if (table.getProvince().equals(key)){
-                            count +=table.getCount();
+                    for (RegionTable table : tables) {
+                        if (table.getProvince().equals(key)) {
+                            count += table.getCount();
                         }
                     }
-                    mMap.put(key,count);
+                    mMap.put(key, count);
                 }
                 PieChart();
+                //==============================最受欢迎电台==========================
+                ArrayList<Integer> WeekLikeCount = new ArrayList<>();
+                ArrayList<String> WeekLikeName = new ArrayList<>();
+                ArrayList<String> WeekLike = new ArrayList<>();
+                Iterator<LikeRadio> ite = SugarRecord.findAll(LikeRadio.class);
+                List<LikeRadio> radios = new ArrayList<>();
+                //获取数据
+                while (ite.hasNext()) {
+                    radios.add(ite.next());
+                }
+                for (LikeRadio table : radios) {
+                    String Area = table.getChannel();
+                    boolean judge = false;
+                    for (String key : WeekLike) {
+                        if (key.equals(Area)) {
+                            judge = true;
+                            break;
+                        }
+                    }
+                    if (!judge) {
+                        WeekLike.add(Area);
+                    }
+                }
+                for (String key : WeekLike) {
+                    int count = 0;
+                    for (LikeRadio table : radios) {
+                        if (table.getChannel().equals(key)) {
+                            count += table.getCount();
+                        }
+                    }
+                    WeekLikeCount.add(count);
+                    WeekLikeName.add(key);
+                }
+                BarChart(WeekLikeCount, WeekLikeName);
+                //===============================最受欢迎节目=============================
+                List<String> name = new ArrayList<>();
+                List<Integer> WeekGreetCount = new ArrayList<>();
+                List<ProgramGreet> greets = ProgramGreet.listAll(ProgramGreet.class);
+                Log.e(TAG, ": " + greets);
+                for (ProgramGreet table : greets) {
+                    String Area = table.getProgramName();
+                    boolean judge = false;
+                    for (String key : name) {
+                        if (key.equals(Area)) {
+                            judge = true;
+                            break;
+                        }
+                    }
+                    if (!judge) {
+                        name.add(Area);
+                    }
+                }
+                for (String key : name) {
+                    int count = 0;
+                    for (ProgramGreet table : greets) {
+                        if (table.getProgramName().equals(key)) {
+                            count += table.getCount();
+                        }
+                    }
+                    WeekGreetCount.add(count);
+                }
+                HBarChart(name, WeekGreetCount);
+                Log.e(TAG, ":节目 ：" + name);
+                Log.e(TAG, ":次数 ：" + WeekGreetCount);
                 break;
 //===================================================================================================================================================
             case R.id.button_month:
@@ -381,15 +531,81 @@ public class AnalyzeFragment extends Fragment {
                 mMap = new HashMap<>();
                 for (String key : MonthRegion) {
                     int count = 0;
-                    for (RegionTable table : tab){
-                        if (table.getProvince().equals(key)){
-                            count +=table.getCount();
+                    for (RegionTable table : tab) {
+                        if (table.getProvince().equals(key)) {
+                            count += table.getCount();
                         }
                     }
-                    mMap.put(key,count);
+                    mMap.put(key, count);
                 }
                 PieChart();
+                //==============================最受欢迎电台==========================
+                ArrayList<Integer> MonthLikeCount = new ArrayList<>();
+                ArrayList<String> MonthLikeName = new ArrayList<>();
+                ArrayList<String> MonthLike = new ArrayList<>();
+                Iterator<LikeRadio> iteIs = SugarRecord.findAll(LikeRadio.class);
+                List<LikeRadio> rad = new ArrayList<>();
+                //获取数据
+                while (iteIs.hasNext()) {
+                    rad.add(iteIs.next());
+                }
+                for (LikeRadio table : rad) {
+                    String Area = table.getChannel();
+                    boolean judge = false;
+                    for (String key : MonthLike) {
+                        if (key.equals(Area)) {
+                            judge = true;
+                            break;
+                        }
+                    }
+                    if (!judge) {
+                        MonthLike.add(Area);
+                    }
+                }
+                for (String key : MonthLike) {
+                    int count = 0;
+                    for (LikeRadio table : rad) {
+                        if (table.getChannel().equals(key)) {
+                            count += table.getCount();
+                        }
+                    }
+                    MonthLikeCount.add(count);
+                    MonthLikeName.add(key);
+                }
+                BarChart(MonthLikeCount, MonthLikeName);
+                Log.e(TAG, ": " + rad);
+                //=========================最受欢迎节目=============================
+                List<String> ProgramName = new ArrayList<>();
+                List<Integer> MonthGreetCount = new ArrayList<>();
+                List<ProgramGreet> greet = ProgramGreet.listAll(ProgramGreet.class);
+                Log.e(TAG, ": " + greet);
+                for (ProgramGreet table : greet) {
+                    String Area = table.getProgramName();
+                    boolean judge = false;
+                    for (String key : ProgramName) {
+                        if (key.equals(Area)) {
+                            judge = true;
+                            break;
+                        }
+                    }
+                    if (!judge) {
+                        ProgramName.add(Area);
+                    }
+                }
+                for (String key : ProgramName) {
+                    int count = 0;
+                    for (ProgramGreet table : greet) {
+                        if (table.getProgramName().equals(key)) {
+                            count += table.getCount();
+                        }
+                    }
+                    MonthGreetCount.add(count);
+                }
+                HBarChart(ProgramName, MonthGreetCount);
+                Log.e(TAG, ":节目 ：" + ProgramName);
+                Log.e(TAG, ":次数 ：" + MonthGreetCount);
                 break;
+
             default:
                 break;
         }

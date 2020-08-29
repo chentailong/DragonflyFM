@@ -186,6 +186,7 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     int count = tableObj.getCount() + 1;
                     long id = tableObj.getId();
                     SugarRecord.executeQuery("update LIKE_RADIO set count=? where id=?", count + "", id + "");
+                    Log.e(TAG, "最受欢迎电台: "+ tableObj.getChannel() + "次数： " + count );
                     return;
                 }
             }

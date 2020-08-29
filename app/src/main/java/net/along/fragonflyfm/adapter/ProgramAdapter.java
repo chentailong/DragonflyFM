@@ -115,7 +115,6 @@ public class ProgramAdapter extends RecyclerView.Adapter<ProgramAdapter.ProgramI
                     ProgramGreet.executeQuery("update PROGRAM_GREET set count=? where id=?",
                             updateCount + 1 + "", thisId + "");
                     Log.e(TAG, "u新增一条最受欢迎节目数据 "+ updateCount);
-
                     return;
                 }
             }
