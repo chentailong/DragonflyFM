@@ -18,7 +18,7 @@ import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.adapter.ProgramAdapter;
 import net.along.fragonflyfm.entity.Program;
 import net.along.fragonflyfm.util.CommonHttpRequest;
-import net.along.fragonflyfm.util.GetTime;
+import net.along.fragonflyfm.util.DateBaseUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,7 +88,7 @@ public class ProgramActivity extends AppCompatActivity {
         channelName = getIntent().getStringExtra("channelName");
         duration = getIntent().getIntExtra("duration",0);
         channelId = getIntent().getIntExtra("channel_id", 1756);
-        final int dayOFWeek = GetTime.dayOFWeek();
+        final int dayOFWeek = DateBaseUtil.dayOFWeek();
         final String baseUrl = "https://rapi.qingting.fm/v2/channels/" + channelId + "/playbills?day=" + dayOFWeek;
         final AlertDialog loadingDialog = new AlertDialog.Builder(ProgramActivity.this).create();
         View loadView = View.inflate(this, R.layout.loading_dialog_data, null);

@@ -35,6 +35,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
@@ -45,6 +48,7 @@ import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.record.AppVisitCount;
 import net.along.fragonflyfm.record.LikeRadio;
 import net.along.fragonflyfm.record.ProgramGreet;
+import net.along.fragonflyfm.record.RadioTendency;
 import net.along.fragonflyfm.record.RegionTable;
 import net.along.fragonflyfm.util.DateBaseUtil;
 
@@ -65,6 +69,7 @@ import java.util.Map;
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class AnalyzeFragment extends Fragment {
     private final String[] titles = {"APP访问次数", "各地区访问比例（%）", "最受欢迎电台", "最受欢迎节目", "电台类型倾向"};
+    private final String[] RadioName = {"资讯台", "音乐台", "交通台", "经济台", "文艺台", "都市台", "体育台", "双语台", "综合台", "生活台", "旅游台", "曲艺台", "方言台"};
     private static final String TAG = "AnalyzeFragment";
     private String pattern = "MM-dd";
     private static final float MIN_TOUCH_DISTANCE = 10f;
@@ -309,6 +314,33 @@ public class AnalyzeFragment extends Fragment {
         mBarChart2.getDescription().setEnabled(false);
     }
 
+    private void RadarChart(List<String> name, List<Integer> count) {
+        List<String> RadioName = new ArrayList<>();
+        List<RadarEntry> entries = new ArrayList<>();
+        for (int i = 0; i < name.size(); i++) {
+            entries.add(new RadarEntry(count.get(i)));
+            RadioName.add(name.get(i));
+        }
+        RadarDataSet set = new RadarDataSet(entries, "");
+        set.setColor(ColorTemplate.LIBERTY_COLORS[0]);
+        set.setFillColor(ColorTemplate.LIBERTY_COLORS[0]);
+        set.setDrawFilled(true);
+        set.setLineWidth(2f);
+        set.setValueTextSize(10);
+        RadarData data = new RadarData(set);
+        mRadarChart.setData(data);
+        mRadarChart.invalidate();
+        mRadarChart.getDescription().setEnabled(false);
+        XAxis xAxis = mRadarChart.getXAxis();
+        xAxis.setTextSize(13);
+        xAxis.setTextColor(Color.BLACK);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(RadioName));
+        YAxis yAxis = mRadarChart.getYAxis();
+        yAxis.setLabelCount(13, false);
+        yAxis.setStartAtZero(true);
+        yAxis.setDrawLabels(false);
+    }
+
     /**
      * 切换时底部圆圈颜色变化 And 标题变化
      */
@@ -384,6 +416,38 @@ public class AnalyzeFragment extends Fragment {
                 BarChart(LikeCount, LikeName);
                 //============================最受欢迎节目=====================================
 
+                //============================电台类型倾向=====================================
+                List<String> RadioName = new ArrayList<>();
+                List<Integer> RadioCount = new ArrayList<>();
+                Iterator<RadioTendency> iterator1 = SugarRecord.findAll(RadioTendency.class);
+                visit = RadioTendency.findAll(RadioTendency.class);  //访问sugar数据库
+                List<RadioTendency> tendencies = new ArrayList<>();
+                while (iterator1.hasNext()) {
+                    tendencies.add(iterator1.next());
+                    RadioTendency tendency = (RadioTendency) visit.next();
+                    long stamp = tendency.getTimeStamp();
+                    Calendar thisCalendar = Calendar.getInstance();
+                    thisCalendar.setTime(new Date(stamp));
+                    RadioCount.add(tendency.getCount());
+                    if (DateBaseUtil.isToday(calendar, thisCalendar)) {
+
+                    }
+                }
+                for (RadioTendency table : tendencies) {
+                    String Area = table.getCategoryTitle();
+                    boolean judge = false;
+                    for (String key : RadioName) {
+                        if (key.equals(Area)) {
+                            judge = true;
+                            break;
+                        }
+                    }
+                    if (!judge) {
+                        RadioName.add(Area);
+                    }
+                }
+                RadarChart(RadioName, RadioCount);
+                Log.e(TAG, ": " + RadioName);
                 break;
 //===================================================================================================================================================
             case R.id.button_week:
@@ -495,6 +559,8 @@ public class AnalyzeFragment extends Fragment {
                 HBarChart(name, WeekGreetCount);
                 Log.e(TAG, ":节目 ：" + name);
                 Log.e(TAG, ":次数 ：" + WeekGreetCount);
+                //=============================电台类型倾向====================================
+
                 break;
 //===================================================================================================================================================
             case R.id.button_month:

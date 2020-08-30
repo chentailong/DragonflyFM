@@ -53,4 +53,16 @@ public class DateBaseUtil {
         SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.getDefault());
         return format.format(date);
     }
+
+    private static Calendar calendar = Calendar.getInstance();
+
+    /**
+     * 获取一周的时间
+     *
+     * @return
+     */
+    public static int dayOFWeek() {
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
 }

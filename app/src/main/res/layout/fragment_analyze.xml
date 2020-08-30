@@ -29,7 +29,7 @@
                 android:id="@+id/button_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/liji_material_red_500"
+                android:buttonTint="@color/colorRed"
                 android:text="当天"
                 android:textColor="#fff" />
 
@@ -37,7 +37,7 @@
                 android:id="@+id/button_week"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/liji_material_red_500"
+                android:buttonTint="@color/colorRed"
                 android:text="过去一周"
                 android:textColor="#fff" />
 
@@ -45,7 +45,7 @@
                 android:id="@+id/button_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/liji_material_red_500"
+                android:buttonTint="@color/colorRed"
                 android:text="过去一月"
                 android:textColor="#fff" />
 

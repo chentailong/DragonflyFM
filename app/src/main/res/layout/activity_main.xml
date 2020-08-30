@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:itemBackground="@color/white"
-        app:itemRippleColor="@color/white"
+        app:itemBackground="@color/colorWhite"
+        app:itemRippleColor="@color/colorWhite"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_bottom_navigation_view" />
 
@@ -39,8 +39,8 @@
         android:layout_above="@id/bottom_view_bar"
         android:layout_alignParentRight="true"
         android:layout_margin="20dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/colorWhite"
         android:src="@drawable/ic_music"
         app:fabSize="mini"
-        app:rippleColor="@color/text1" />
+        app:rippleColor="@color/colorPrimary" />
 </RelativeLayout>
