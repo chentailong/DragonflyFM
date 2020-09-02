@@ -106,9 +106,13 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if (isCollect(fmCardView.getContent_id(), fmCardView.getTitle())) {
                     Toast.makeText(context, "你取消收藏了这个电台", Toast.LENGTH_SHORT).show();
                     ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
-                    updateFavourite(fmCardView.getContent_id(), fmCardView.getTitle(), fmCardView.getCover(), false);
+                    updateFavourite(fmCardView.getContent_id(), fmCardView.getTitle(), fmCardView.getCover(),
+                            fmCardView.getAudience_count(), fmCardView.getNowplaying().getStart_time(),
+                            fmCardView.getNowplaying().getId(), fmCardView.getNowplaying().getDuration(), false);
                 } else {
-                    updateFavourite(fmCardView.getContent_id(), fmCardView.getTitle(), fmCardView.getCover(), true);
+                    updateFavourite(fmCardView.getContent_id(), fmCardView.getTitle(), fmCardView.getCover(),
+                            fmCardView.getAudience_count(), fmCardView.getNowplaying().getStart_time(),
+                            fmCardView.getNowplaying().getId(), fmCardView.getNowplaying().getDuration(), true);
                     Toast.makeText(context, "你收藏了这个电台", Toast.LENGTH_SHORT).show();
                     ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_collect);
                 }
@@ -143,12 +147,17 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param imgUrl
      * @param flag      当flog为true时，为添加收藏数据
      */
-    private void updateFavourite(int channelId, String title, String imgUrl, boolean flag) {
+    private void updateFavourite(int channelId, String title, String imgUrl, int audience_count, String startTime,
+                                 int programId, int duration, boolean flag) {
         if (flag) {
             CollectRadio radio = new CollectRadio();
             radio.setChannel_id(channelId);
             radio.setImgUrl(imgUrl);
             radio.setTitle(title);
+            radio.setAudience_count(audience_count);
+            radio.setStart_time(startTime);
+            radio.setIdes(programId);
+            radio.setDuration(duration);
             radio.save();
             Log.e("updateFavourite", "添加了一条数据——" + radio.toString());
         } else {

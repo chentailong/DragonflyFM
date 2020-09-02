@@ -12,7 +12,10 @@ public class CollectRadio extends SugarRecord {
 
     private String title;
     private String imgUrl;
+    private String start_time;
     private int channel_id;
+    private int duration;
+    private int ides;
     private int audience_count;
 
     public String getTitle() {
@@ -47,13 +50,37 @@ public class CollectRadio extends SugarRecord {
         this.audience_count = audience_count;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getStart_time() {
+        return start_time;
+    }
+
+    public void setStart_time(String start_time) {
+        this.start_time = start_time;
+    }
+
+    public int getIdes() {
+        return ides;
+    }
+
+    public void setIdes(int ides) {
+        this.ides = ides;
+    }
+
     @Override
     public String toString() {
         return "CollectRadio{" +
                 "title='" + title + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
                 ", channel_id=" + channel_id +
-                ", audience_count=" + audience_count +
+                ", audience_count=" +
                 '}';
     }
 }
