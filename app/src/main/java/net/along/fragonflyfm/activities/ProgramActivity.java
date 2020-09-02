@@ -54,7 +54,6 @@ public class ProgramActivity extends AppCompatActivity {
     public int programId;
     public int duration;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +61,6 @@ public class ProgramActivity extends AppCompatActivity {
         initView();
         inData();
     }
-
 
     /**
      * 初始化控件

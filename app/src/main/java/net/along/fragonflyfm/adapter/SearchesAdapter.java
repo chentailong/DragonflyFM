@@ -2,7 +2,6 @@ package net.along.fragonflyfm.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +24,7 @@ import net.along.fragonflyfm.R;
 import net.along.fragonflyfm.activities.ProgramActivity;
 import net.along.fragonflyfm.entity.Categories;
 import net.along.fragonflyfm.entity.SearchesData;
+import net.along.fragonflyfm.record.CollectRadio;
 import net.along.fragonflyfm.record.LikeRadio;
 import net.along.fragonflyfm.record.RadioTendency;
 import net.along.fragonflyfm.service.FMItemJsonService;
@@ -47,7 +46,6 @@ import java.util.List;
 public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "SearchesAdapter";
     protected List<SearchesData> data;
-    private int flag = 0;
     private Context context;
 
     public SearchesAdapter(Context context, List<SearchesData> data) {
@@ -69,7 +67,6 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CardViewHolder) {
@@ -77,7 +74,11 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((CardViewHolder) holder).listeners.setText(fmCardView.getAudience_count() + "");
             ((CardViewHolder) holder).titleTextView.setText(fmCardView.getTitle());
             Glide.with(context).load(fmCardView.getCover()).into(((CardViewHolder) holder).coverImg);
-            ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
+            if (isCollect(fmCardView.getContent_id(), fmCardView.getTitle())) {
+                ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_collect);
+            } else {
+                ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
+            }
 
             ((CardViewHolder) holder).card_view.setOnClickListener(view -> {
                 updateChannelRecord(fmCardView.getTitle(), fmCardView.getContent_id());
@@ -90,30 +91,70 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 intent.putExtra("channel", fmCardView.getTitle());
                 intent.putExtra("channel_id", fmCardView.getContent_id());
                 intent.putExtra("audience_count", fmCardView.getAudience_count());
-                if (fmCardView.getNowplaying()!=null) {
+                if (fmCardView.getNowplaying() != null) {
                     intent.putExtra("startTime", fmCardView.getNowplaying().getStart_time());
                     intent.putExtra("programId", fmCardView.getNowplaying().getId());
                     intent.putExtra("duration", fmCardView.getNowplaying().getDuration());
-                }else{
+                } else {
                     Toast.makeText(context, "暂无节目播放，请选择其他电台节目", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 context.startActivity(intent);
             });
+
             ((CardViewHolder) holder).favorImg.setOnClickListener(view -> {
-                switch (flag) {
-                    case 0:
-                        Toast.makeText(context, "你收藏了这个电台", Toast.LENGTH_SHORT).show();
-                        ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_collect);
-                        flag = 1;
-                        break;
-                    case 1:
-                        Toast.makeText(context, "你取消收藏了这个电台", Toast.LENGTH_SHORT).show();
-                        ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
-                        flag = 0;
-                        break;
+                if (isCollect(fmCardView.getContent_id(), fmCardView.getTitle())) {
+                    Toast.makeText(context, "你取消收藏了这个电台", Toast.LENGTH_SHORT).show();
+                    ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_not_collect);
+                    updateFavourite(fmCardView.getContent_id(), fmCardView.getTitle(), fmCardView.getCover(), false);
+                } else {
+                    updateFavourite(fmCardView.getContent_id(), fmCardView.getTitle(), fmCardView.getCover(), true);
+                    Toast.makeText(context, "你收藏了这个电台", Toast.LENGTH_SHORT).show();
+                    ((CardViewHolder) holder).favorImg.setImageResource(R.drawable.ic_collect);
                 }
             });
+        }
+    }
+
+
+    /**
+     * 判断电台是否被收藏
+     *
+     * @param channelId
+     * @param title
+     * @return
+     */
+    private boolean isCollect(int channelId, String title) {
+        List<CollectRadio> radios = SugarRecord.findWithQuery(CollectRadio.class,
+                "select * from COLLECT_RADIO where channelId=? "
+                        + "and title=?", channelId + "", title);
+        if (radios.size() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 添加收藏数据
+     *
+     * @param channelId
+     * @param title
+     * @param imgUrl
+     * @param flag      当flog为true时，为添加收藏数据
+     */
+    private void updateFavourite(int channelId, String title, String imgUrl, boolean flag) {
+        if (flag) {
+            CollectRadio radio = new CollectRadio();
+            radio.setChannel_id(channelId);
+            radio.setImgUrl(imgUrl);
+            radio.setTitle(title);
+            radio.save();
+            Log.e("updateFavourite", "添加了一条数据——" + radio.toString());
+        } else {
+            SugarRecord.executeQuery("delete from COLLECT_RADIO where channelId=? " +
+                    "and title=?", channelId + "", title);
+            Log.e(TAG, "删除了一条数据——" + title);
         }
     }
 
@@ -186,7 +227,7 @@ public class SearchesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     int count = tableObj.getCount() + 1;
                     long id = tableObj.getId();
                     SugarRecord.executeQuery("update LIKE_RADIO set count=? where id=?", count + "", id + "");
-                    Log.e(TAG, "最受欢迎电台: "+ tableObj.getChannel() + "次数： " + count );
+                    Log.e(TAG, "最受欢迎电台: " + tableObj.getChannel() + "次数： " + count);
                     return;
                 }
             }

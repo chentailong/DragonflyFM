@@ -3,9 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<GridView
-    android:id="@+id/fragment_radio_rv"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    <Toolbar
+        android:id="@+id/favor_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorTitle"
+        android:elevation="10dp" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/favor_toolbar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favor_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 </RelativeLayout>

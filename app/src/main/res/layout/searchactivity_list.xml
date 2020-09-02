@@ -31,14 +31,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:text="搜索" />
+
             <Button
                 android:id="@+id/bt_cancel"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:text="取消收藏"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
         </LinearLayout>
 
 
