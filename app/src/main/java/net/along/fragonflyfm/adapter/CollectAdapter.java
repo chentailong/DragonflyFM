@@ -2,7 +2,6 @@ package net.along.fragonflyfm.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -60,7 +59,6 @@ public class CollectAdapter extends RecyclerView.Adapter<CollectAdapter.CollectI
             String title = radio.getTitle();
             SugarRecord.executeQuery("delete from COLLECT_RADIO where channelId=? " +
                     "and title=?", channelId + "", title);
-            Log.e(TAG, "删除了一条数据——" + title);
         });
         Glide.with(context).load(radio.getImgUrl()).error(R.drawable.sh).into(holder.img);
 

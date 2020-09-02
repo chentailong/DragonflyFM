@@ -1,8 +1,10 @@
 package net.along.fragonflyfm.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private SearchesFragment mSearchesFragment;
     private BottomNavigationView button;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void initView() {
         mAnalyzeFragment = new AnalyzeFragment();
         mRadioFragment = new RadioFragment();
