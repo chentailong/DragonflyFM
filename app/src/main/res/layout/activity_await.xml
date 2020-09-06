@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:padding="50dp"
+            android:padding="55dp"
             android:text="@string/txt_copy_right"
             android:textColor="@android:color/holo_orange_dark"
             android:textSize="@dimen/smallText" />
