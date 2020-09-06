@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">蜻蜓FM</string>
-    <string name="txt_copy_right">陈泰龙···</string>
+    <string name="txt_copy_right">蜻蜓FM</string>
     <string name="txt_ip_hint">请输入服务器IP</string>
     <string name="txt_port_hint">请输入端口号</string>
 
