@@ -23,9 +23,9 @@ import net.along.fragonflyfm.record.CollectRadio;
 import java.util.List;
 
 /**
- * 创建者 by:陈泰龙
+ * 创建者 by:胡大航
  * <p>
- * 2020/9/2
+ * 2020/9/8
  **/
 
 public class CollectAdapter extends RecyclerView.Adapter<CollectAdapter.CollectItem> {
