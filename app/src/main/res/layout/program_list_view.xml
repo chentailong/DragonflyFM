@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/program_title"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="23dp"
             android:layout_toRightOf="@+id/program_microphone_imageView"
             android:text="陆秋傧 " />
 
@@ -85,7 +85,7 @@
             android:layout_below="@+id/program_title"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="23dp"
             android:layout_marginRight="10dp"
             android:text="19:00" />
 

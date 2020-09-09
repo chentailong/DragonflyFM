@@ -31,8 +31,7 @@ import java.util.List;
 public class CollectAdapter extends RecyclerView.Adapter<CollectAdapter.CollectItem> {
     private Context context;
     private List<CollectRadio> tables;//数据
-    private List<SearchesData> data;
-    private String TAG = "CollectAdapter";
+
 
     public CollectAdapter(Context context, List<CollectRadio> tables) {
         this.tables = tables;

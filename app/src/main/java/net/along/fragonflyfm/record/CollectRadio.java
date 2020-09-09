@@ -3,9 +3,9 @@ package net.along.fragonflyfm.record;
 import com.orm.SugarRecord;
 
 /**
- * 创建者 by:陈泰龙
+ * 创建者 by:胡大航
  * <p>实现收藏功能的保存
- * * 2020/9/2
+ * * 2020/9/8
  **/
 
 public class CollectRadio extends SugarRecord {
